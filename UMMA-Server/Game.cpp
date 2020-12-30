@@ -46,6 +46,7 @@ Player* Game::GetGameHost() {
 
 bool Game::MakeGame() {
 	iType = GAME_GAME;
+	PrepareCards();
 	return true;
 }
 
