@@ -44,6 +44,21 @@ Player* Game::GetGameHost() {
 	return NULL;
 }
 
+bool Game::MakeGame() {
+	iType = GAME_GAME;
+	return true;
+}
+
+void Game::PrepareCards() {
+	//todo: count how many decks do we need.
+	AddDeck();
+	Shuffle();
+}
+
+void Game::Shuffle() {
+	std::random_shuffle(vCards.begin(), vCards.end());
+}
+
 bool Game::IsPlayerInGame(Player* player) {
 	if (!player) return false;
 
@@ -103,6 +118,14 @@ std::string Game::MsgGetLobbyStatus() {
 	r.append("-");
 
 	return r;
+}
+
+void Game::AddDeck() {
+	for (size_t type = 0; type < TYPE_LENGTH; type++) {
+		for (size_t suit = 0; suit < SUIT_LENGTH; suit++) {
+			vCards.push_back(new Card(static_cast<CARD_TYPE>(type), static_cast<CARD_SUIT>(suit)));
+		}
+	}
 }
 
 Game::~Game() {

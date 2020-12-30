@@ -2,8 +2,10 @@
 #define GAME
 
 #include "Player.h"
+#include "Card.h"
 #include <vector>
 #include <string>
+#include <algorithm>
 
 enum GAME_TYPE {
 	GAME_NONE,
@@ -24,6 +26,10 @@ public:
 	bool SetGameHost(Player* player);
 	Player *GetGameHost();
 
+	bool MakeGame();
+	void PrepareCards();
+	void Shuffle();
+
 	bool IsPlayerInGame(Player* player);
 	bool AddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
@@ -32,12 +38,17 @@ public:
 	std::string MsgGetLobbyStatus();
 
 private:
+	void AddDeck();
 	int iGameHostId;
 
 	int iType;
 	int iId;
 
 	std::vector<Player*> vPlayers;
+	std::vector<Card*> vCards;
+
+	//Game
+	int iRound;
 };
 
 
