@@ -111,6 +111,7 @@ void Handle() {
 					game = GetSessionHandler()->GetGame(gameid);
 					if (game) {
 						if (game->AddPlayer(player)) { //returns true only on success
+							game->SetGameHost(player);
 							sendStatus = true;
 						}
 					}

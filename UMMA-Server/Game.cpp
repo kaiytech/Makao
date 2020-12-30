@@ -28,9 +28,20 @@ bool Game::IsLobby() {
 	else return false;
 }
 
+// returns true on success
 bool Game::SetGameHost(Player* player) {
-	if (!player) return;
+	if (!player) return false;
 	iGameHostId = player->GetId();
+	return true;
+}
+
+// returns Player* if game host is set
+// returns NULL otherwise
+Player* Game::GetGameHost() {
+	for (int i = 0; i < vPlayers.size(); i++) {
+		if (vPlayers[i]->GetId() == iGameHostId) return vPlayers[i];
+	}
+	return NULL;
 }
 
 bool Game::IsPlayerInGame(Player* player) {
@@ -83,6 +94,7 @@ std::string Game::MsgGetLobbyStatus() {
 	std::string r = "lobbystatus|";
 	for (size_t i = 0; i < vPlayers.size(); i++) {
 		r.append(std::to_string(vPlayers[i]->GetId()));
+		if (vPlayers[i]->GetId() == iGameHostId) r.append("H");
 		r.append("|");
 	}
 

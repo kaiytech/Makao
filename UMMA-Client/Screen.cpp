@@ -43,7 +43,12 @@ void Screen::DisplayLobby(std::string datain) {
 		if (players.find("|") == string::npos) break;
 		int sap = players.find("|");
 		std::string pl = players.substr(0, sap);
-		cout << ">> Player #" << pl << "\n";
+		if (pl.find("H") != std::string::npos) {
+			cout << ">> Player #" << pl.substr(0, pl.length() - 1) << " (Host)" << "\n";
+		}
+		else {
+			cout << ">> Player #" << pl << "\n";
+		}
 		players = players.substr(sap + 1, players.length());
 	}
 	cout << "1. Rozpocznij gre\n";
