@@ -93,11 +93,11 @@ void Handle() {
 				// Lobby:
 				if (game->HasId() && game->IsInLobby()) {
 					if (KEYPRESSED(0x31)) { // 1
-						//sprintf_s(msgtosend, "createlobby|%i", game->GetId());
-						//game->SetInLobby(true);
+						//sprintf_s(msgtosend, "startgame|%i", game->GetId());
+						//game->SetInGame(true);
 						break;
 					}
-					if (KEYPRESSED(0x32)) { // 2
+					if (KEYPRESSED(0x30)) { // 0
 						sprintf_s(msgtosend, "leavelobby|%i", game->GetId());
 						game->SetInLobby(false);
 						break;

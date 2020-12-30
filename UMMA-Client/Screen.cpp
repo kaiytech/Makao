@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Screen.h"
+#include "Game.h"
 #include <string>
 
 using namespace std;
@@ -37,6 +38,7 @@ void Screen::DisplayLobby(std::string datain) {
 	int iEndOfMessage = datain.find("-");
 	std::string roomnumer = datain.substr(iEndOfPlayers + 1, 1);
 	cout << "Pokoj ID: " << roomnumer << ".\n";
+	bool isHost = false;
 
 	std::string players = datain.substr(0, iEndOfPlayers);
 	while (true) {
@@ -45,14 +47,16 @@ void Screen::DisplayLobby(std::string datain) {
 		std::string pl = players.substr(0, sap);
 		if (pl.find("H") != std::string::npos) {
 			cout << ">> Player #" << pl.substr(0, pl.length() - 1) << " (Host)" << "\n";
+			if (stoi(pl.substr(0, pl.length() - 1)) == game->GetId()) isHost = true;
 		}
 		else {
 			cout << ">> Player #" << pl << "\n";
 		}
 		players = players.substr(sap + 1, players.length());
 	}
-	cout << "1. Rozpocznij gre\n";
-	cout << "2. Wyjdz z pokoju\n";
+	cout << "\n";
+	if(isHost) cout << "1. Rozpocznij gre\n";
+	cout << "0. Wyjdz z pokoju\n";
 }
 
 // lobbylist|id+players|id+players|-
