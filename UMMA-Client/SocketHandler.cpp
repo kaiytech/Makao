@@ -11,6 +11,8 @@
 #define DEBUG_LOG false
 #define KEYPRESSED(x) (GetConsoleWindow() == GetForegroundWindow()) && GetKeyState(x) && GetAsyncKeyState(x)
 
+#define WAIT_TIME 1
+
 using namespace std;
 
 void Handle() {
@@ -47,7 +49,7 @@ void Handle() {
 		{
 			// if it's stupid but it works then it ain't stupid
 			time_t t = time(NULL);
-			long long int time_target = t + 3;
+			long long int time_target = t + WAIT_TIME;
 			if(DEBUG_LOG) cout << "Input time.";
 			while (true) {
 				if (bAskForStatus) {
