@@ -4,6 +4,8 @@ Game::Game(int id) {
 	iId = id;
 	iType = GAME_NONE;
 	iGameHostId = -1;
+	iRound = 1;
+	iPlayerTurnId = -1;
 }
 
 int Game::GetId() {
@@ -99,6 +101,18 @@ bool Game::RemovePlayer(int playerid) {
 	return true; //hm.
 }
 
+
+
+// executes the move (or doesn't, if not needed)
+std::string Game::ExecuteMove(std::string datain) {
+	if (iTurn == 1) { //first round
+		iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
+	}
+
+}
+
+
+
 // outputs the lobby status in the following syntax:
 // lobbystatus|...|...|*lobbyid-
 // ... - players in lobby
@@ -119,6 +133,10 @@ std::string Game::MsgGetLobbyStatus() {
 	r.append("-");
 
 	return r;
+}
+
+std::string Game::MsgGetGameStatus(int playerid) {
+	
 }
 
 void Game::AddDeck() {

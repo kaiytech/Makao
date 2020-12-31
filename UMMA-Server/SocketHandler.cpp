@@ -84,9 +84,9 @@ void Handle() {
 					if (g->IsLobby()) {
 						response = g->MsgGetLobbyStatus();
 					}
-					// not in lobby:
+					// in game:
 					else {
-
+						response g->MsgGetGameStatus(playerid);
 					}
 				}
 				//akcja
@@ -148,6 +148,14 @@ void Handle() {
 				else {
 					response = "Hi"; //defaulting the response
 				}
+			}
+
+
+			if (st.rfind("begingame|", 0) == 0) {
+				std::string tocut;
+				tocut = st.substr(10, st.length());
+				GetSessionHandler()->ParseAndExecuteBeginGame(tocut);
+				response = "AFS";
 			}
 
 

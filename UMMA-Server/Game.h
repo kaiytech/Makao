@@ -35,7 +35,10 @@ public:
 	bool RemovePlayer(Player* player);
 	bool RemovePlayer(int playerid);
 
+	std::string ExecuteMove(std::string datain);
+
 	std::string MsgGetLobbyStatus();
+	std::string MsgGetGameStatus(int playerid);
 
 private:
 	void AddDeck();
@@ -48,7 +51,8 @@ private:
 	std::vector<Card*> vCards;
 
 	//Game
-	int iRound;
+	int iTurn;
+	int iPlayerTurnId;
 };
 
 

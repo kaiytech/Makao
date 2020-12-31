@@ -95,7 +95,7 @@ void Handle() {
 				// Lobby:
 				if (game->HasId() && game->IsInLobby()) {
 					if (KEYPRESSED(0x31)) { // 1
-						//sprintf_s(msgtosend, "startgame|%i", game->GetId());
+						sprintf_s(msgtosend, "begingame|%i", game->GetId());
 						//game->SetInGame(true);
 						break;
 					}

@@ -1,5 +1,7 @@
 #include "SessionHandler.h"
 #include "Game.h"
+#include <string>
+#include <stdexcept>
 
 static SessionHandler* __g_sh = 0;
 
@@ -110,6 +112,37 @@ bool SessionHandler::JoinLoby(int playerid, int lobbyid) {
 	Game* game = GetGame(lobbyid);
 	if (!game) return false;
 	return game->AddPlayer(player);
+}
+
+bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
+	std::string tocut = datain;
+	int playerid;
+	try {
+		playerid = stoi(tocut);
+	}
+	catch (const std::invalid_argument& ia) {
+		return false;
+	}
+	catch (const std::out_of_range& oor) {
+		return false;
+	}
+	catch (const std::exception& e) {
+		return false;
+	}
+
+	Player* p = GetPlayer(playerid);
+	if (!p) return false;
+
+	Game* game = NULL;
+
+	for (int g = 0; g < vGames.size(); g++) {
+		if (vGames[g]->IsPlayerInGame(p) && (vGames[g]->GetGameHost() == p)) game = vGames[g];
+	}
+
+	if (!game) return false;
+
+	return game->MakeGame();
+
 }
 
 // Destructor

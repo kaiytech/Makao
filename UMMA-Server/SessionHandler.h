@@ -22,6 +22,8 @@ public:
 	bool ParseAndExecuteJoinLobby(std::string datain);
 	bool JoinLoby(int playerid, int lobbyid);
 
+	bool ParseAndExecuteBeginGame(std::string datain);
+
 	std::string GetGameList();
 
 private:
