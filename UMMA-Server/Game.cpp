@@ -4,7 +4,7 @@ Game::Game(int id) {
 	iId = id;
 	iType = GAME_NONE;
 	iGameHostId = -1;
-	iRound = 1;
+	iTurn = 1;
 	iPlayerTurnId = -1;
 }
 
