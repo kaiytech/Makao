@@ -193,6 +193,14 @@ void Handle() {
 			l = screen->DisplayLobbyList(tosend);
 		}
 
+		// game stauts
+		else if (st.rfind("gamestatus|", 0) == 0) {
+			std::string tosend = st.substr(11, st.length());
+			//todo: game actions
+			screen->DisplayGameScreen(tosend);
+
+		}
+
 		
 		if(DEBUG_LOG) cout << "\tMessage from SERVER: \t" << CONVERTER << endl;
 

@@ -105,10 +105,10 @@ bool Game::RemovePlayer(int playerid) {
 
 // executes the move (or doesn't, if not needed)
 std::string Game::ExecuteMove(std::string datain) {
-	if (iTurn == 1) { //first round
-		iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
-	}
-
+	//if (iTurn == 1) { //first round
+	//	iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
+	//}
+	return "";
 }
 
 
@@ -136,7 +136,7 @@ std::string Game::MsgGetLobbyStatus() {
 }
 
 std::string Game::MsgGetGameStatus(int playerid) {
-	
+	return "gamestatus|1|2|3|*10|32|1|43|CA|S0|DK|C4|*HQ|X|0-";
 }
 
 void Game::AddDeck() {

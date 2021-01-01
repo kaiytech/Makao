@@ -86,7 +86,7 @@ void Handle() {
 					}
 					// in game:
 					else {
-						response g->MsgGetGameStatus(playerid);
+						response = g->MsgGetGameStatus(playerid);
 					}
 				}
 				//akcja

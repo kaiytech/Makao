@@ -24,6 +24,8 @@ public:
 	void DisplayLobby(std::string datain);
 	lobbylist DisplayLobbyList(std::string datain);
 	void DisplayWaitScreen();
+
+	void DisplayGameScreen(std::string datain);
 };
 
 Screen* GetScreen();
