@@ -8,12 +8,7 @@
 
 int main()
 {
-    std::cout << "========================\n";
-    std::cout << "======== Makao =========\n";
-    std::cout << "========================\n";
-    std::cout << "=== Kajetan Krawczyk ===\n";
-    std::cout << "==== Michal Radtke =====\n";
-    std::cout << "========================\n";
+    screen->DisplaySplashScreen();
 
     Sleep(1000);
     screen->DisplayWaitScreen();

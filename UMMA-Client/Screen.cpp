@@ -2,11 +2,15 @@
 #include "Screen.h"
 #include "Game.h"
 #include <string>
+#include <Windows.h>
 
 using namespace std;
 
 // hacky
 // #define list(x,y) l.l#x = y
+
+#define PRINT(x) cout << x; Fill(true)
+#define FINISHPRINT Fill(false)
 
 static Screen* sc = 0;
 Screen* GetScreen() {
@@ -15,29 +19,41 @@ Screen* GetScreen() {
 }
 
 Screen::Screen() {
-
+	// remove the blinking cursor
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO     cursorInfo;
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = false;
+	SetConsoleCursorInfo(out, &cursorInfo);
+	// </>
 }
 
-void Screen::ClearScreen() {
-	system("cls"); //literally the only thing that makes it Linux incompatible :'))
+
+void Screen::DisplaySplashScreen() {
+	PRINT("========================");
+	PRINT("======== Makao =========");
+	PRINT("========================");
+	PRINT("=== Kajetan Krawczyk ===");
+	PRINT("==== Michal Radtke =====");
+	PRINT("========================");
+	FINISHPRINT;
 }
 
 void Screen::DisplayMainMenu() {
-	ClearScreen();
-	cout << "MAKAO\n";
-	cout << "Kliknij cyfre odpowiadajaca Twojemu wyborowi:\n";
-	cout << "1. Utworz pokoj\n";
-	cout << "2. Dolacz do pokoju\n";
-	cout << "3. Wyjdz\n";
+	PRINT("Makao");
+	PRINT("Kliknij cyfre odpowiadajaca Twojemu wyborowi:");
+	PRINT("1. Utworz pokoj:");
+	PRINT("2. Dolacz do pokoju");
+	PRINT("3. Wyjdz");
+	FINISHPRINT;
 }
 
 // 5|8|6|*2-
 void Screen::DisplayLobby(std::string datain) {
-	ClearScreen();
 	int iEndOfPlayers = datain.find("*");
 	int iEndOfMessage = datain.find("-");
-	std::string roomnumer = datain.substr(iEndOfPlayers + 1, 1);
-	cout << "Pokoj ID: " << roomnumer << ".\n";
+	std::string roomnumber = datain.substr(iEndOfPlayers + 1, 1);
+	PRINT("Pokoj ID: " << roomnumber);
 	bool isHost = false;
 
 	std::string players = datain.substr(0, iEndOfPlayers);
@@ -46,17 +62,20 @@ void Screen::DisplayLobby(std::string datain) {
 		int sap = players.find("|");
 		std::string pl = players.substr(0, sap);
 		if (pl.find("H") != std::string::npos) {
-			cout << ">> Player #" << pl.substr(0, pl.length() - 1) << " (Host)" << "\n";
+			//cout << ">> Player #" << pl.substr(0, pl.length() - 1) << " (Host)" << "\n";
+			PRINT(">> Player #" << pl.substr(0, pl.length() - 1) << " (Host)");
 			if (stoi(pl.substr(0, pl.length() - 1)) == game->GetId()) isHost = true;
 		}
 		else {
-			cout << ">> Player #" << pl << "\n";
+			//cout << ">> Player #" << pl << "\n";
+			PRINT(">> Player #" << pl);
 		}
 		players = players.substr(sap + 1, players.length());
 	}
-	cout << "\n";
-	if(isHost) cout << "1. Rozpocznij gre\n";
-	cout << "0. Wyjdz z pokoju\n";
+	PRINT("");
+	if (isHost) PRINT("1. Rozpocznij gre");
+	PRINT("0. Wyjdz z pokoju");
+	FINISHPRINT;
 }
 
 // lobbylist|id+players|id+players|-
@@ -64,7 +83,6 @@ void Screen::DisplayLobby(std::string datain) {
 lobbylist Screen::DisplayLobbyList(std::string datain) {
 	lobbylist l;
 	l.l1 = -1; l.l2 = -1; l.l3 = -3; l.l4 = -1; l.l5 = -1; l.l6 = -1; l.l7 = -1; l.l8 = -1; l.l9 = -1;
-	ClearScreen();
 	int iEndOfMessage = datain.find("-");
 	string rooms = datain.substr(0, iEndOfMessage);
 	int num = 1;
@@ -77,7 +95,7 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 		std::string rid = r.substr(0, r.find("+"));
 		std::string rpn = r.substr(r.find("+") + 1, r.length());
 
-		cout << num << " Pokoj #" << rid << " (" << rpn << " graczy)" << "\n";
+		PRINT(num << " Pokoj #" << rid << " (" << rpn << " graczy)");
 		rooms = rooms.substr(sap + 1, rooms.length());
 
 		// this is embarassing
@@ -96,27 +114,26 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 		}
 		num++;
 	}
-	cout << "0. Wroc do ekranu glownego";
+	PRINT("0. Wroc do ekranu glownego");
+	FINISHPRINT;
 	return l;
 }
 
 void Screen::DisplayWaitScreen() {
-	ClearScreen();
-	cout << "Laczenie z serwerem. Prosze czekac.\n";
+	PRINT("Laczenie z serwerem. Prosze czekac.");
+	FINISHPRINT;
 }
 
 // gamestatus|	1|2|3|		*10|		32|		1|		43|		CA|S0|DK|C4|	*HQ|	X|			0-
 // gamestatus|	...|...|	*gameid|	iturn|	turn|	time|	...|...|		*card|	function|	end-﻿
 void Screen::DisplayGameScreen(std::string datain) {
-	ClearScreen();
-
 	std::string workingdata = datain;
 	//first cut off the junk data after '-'
 	workingdata = workingdata.substr(0, workingdata.find("-") + 1);
 
 	//print player list
 	{
-		cout << "Players: \n";
+		PRINT("Players:");
 		int endOfPlayerList = workingdata.find("*");
 		std::string playerlist = workingdata.substr(0, endOfPlayerList);
 		int playerindicator = 1;
@@ -124,7 +141,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
-			cout << playerindicator << ". " << tempstring << "\n";
+			PRINT(playerindicator << ". " << tempstring);
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
 		}
@@ -135,7 +152,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Game ID: " << tempstring << "\n";
+		PRINT("Game ID: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -143,7 +160,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Turn number: " << tempstring << "\n";
+		PRINT("Turn number: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -151,9 +168,9 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Is it my turn?: ";
-		if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No"; 
-		cout << "\n";
+		PRINT("Is it my turn?: " << (bool)stoi(tempstring) ? "Yes" : "No");
+		//if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No"; 
+		//cout << "\n";
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -161,13 +178,13 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Remaining time: " << tempstring << "s\n";
+		PRINT("Remaining time: " << tempstring << "s");
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
 	//print player cards
 	{
-		cout << "Player cards: \n";
+		PRINT("Player cards:");
 		int endOfCardList = workingdata.find("*");
 		std::string playerlist = workingdata.substr(0, endOfCardList);
 		int playerindicator = 1;
@@ -175,7 +192,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
-			cout << playerindicator << ". " << tempstring << "\n";
+			PRINT(playerindicator << ". " << tempstring);
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
 		}
@@ -186,7 +203,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Current card: " << tempstring << "\n";
+		PRINT("Current card: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -194,7 +211,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Card function: " << tempstring << "\n";
+		PRINT("Card function: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -202,12 +219,63 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("-");
 		std::string tempstring = workingdata.substr(0, sap);
-		cout << "Has the game ended?: ";
-		if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No";
-		cout << "\n";
+		PRINT("Has the game ended?: " << (bool)stoi(tempstring) ? "Yes" : "No");
+		//if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No";
+		//cout << "\n";
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
-	cout << workingdata << "\n";
+	FINISHPRINT;
+}
 
+COORD Screen::GetConsoleCursorPosition(HANDLE hConsoleOutput)
+{
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	if (GetConsoleScreenBufferInfo(hConsoleOutput, &cbsi)) {
+		return cbsi.dwCursorPosition;
+	}
+	else {
+		// The function failed. Call GetLastError() for details.
+		COORD invalid = { 0, 0 };
+		return invalid;
+	}
+}
+
+void Screen::setCursorPosition(int x, int y) {
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	std::cout.flush();
+	COORD coord = { (SHORT)x, (SHORT)y };
+	SetConsoleCursorPosition(hOut, coord);
+}
+
+void Screen::Fill(bool line = true) {
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD c = GetConsoleCursorPosition(hOut);
+
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	GetConsoleScreenBufferInfo(hOut, &cbsi);
+
+	if (line) {
+		int spacesToDo = cbsi.srWindow.Right - cbsi.srWindow.Left - c.X;
+		std::string r = "";
+		for (size_t i = 0; i < spacesToDo; i++) {
+			r.append(" ");
+		}
+		r.append("\n");
+		cout << r;
+	}
+	else {
+		int linesToDo = cbsi.srWindow.Bottom - cbsi.srWindow.Top - c.Y;
+		int spacesToDo = cbsi.srWindow.Right - cbsi.srWindow.Left;
+		std::string r = "";
+		for (size_t i = 0; i < linesToDo; i++) {
+			for (size_t i = 0; i < spacesToDo; i++) {
+				r.append(" ");
+			}
+		}
+		r.append("\n");
+		cout << r;
+
+		setCursorPosition(0, 0);
+	}
 }
