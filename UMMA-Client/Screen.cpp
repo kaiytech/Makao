@@ -4,6 +4,10 @@
 #include <string>
 #include <Windows.h>
 
+#include <stdio.h>
+#include <io.h> //for _setmode
+#include <fcntl.h> //for _O_U16TEXT
+
 using namespace std;
 
 // hacky
@@ -26,16 +30,58 @@ Screen::Screen() {
 	cursorInfo.bVisible = false;
 	SetConsoleCursorInfo(out, &cursorInfo);
 	// </>
+
+	// font size
+	CONSOLE_FONT_INFOEX cfi;
+	cfi.cbSize = sizeof(cfi);
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = 0;
+	cfi.dwFontSize.Y = 24;
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = FW_NORMAL;
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+
+	// console size
+	HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r);
+	MoveWindow(console, r.left, r.top, 800, 500, TRUE);
 }
 
 
 void Screen::DisplaySplashScreen() {
-	PRINT("========================");
-	PRINT("======== Makao =========");
-	PRINT("========================");
-	PRINT("=== Kajetan Krawczyk ===");
-	PRINT("==== Michal Radtke =====");
-	PRINT("========================");
+	windowsize w = GetWindowSize();
+	int x = w.x; int y = w.y;
+	std::vector<std::string> s;
+	setcolor(40);
+	for (size_t i = 1; i < (y - 8) / 2; i++) {
+		for (size_t i = 0; i <= x; i++)
+		{
+			cout << (char)176;
+		}
+		cout << "\n";
+	}
+	setcolor(7);
+	s.push_back("dummy");
+	s.push_back("  ___  ___      _                ");
+	s.push_back("  |  \\/  |     | |               ");
+	s.push_back("  | .  . | __ _| | ____ _  ___   ");
+	s.push_back("  | |\\/| |/ _` | |/ / _` |/ _ \\  ");
+	s.push_back("  | |  | | (_| |   < (_| | (_) | ");
+	s.push_back("  \\_|  |_/\\__,_|_|\\_\\__,_|\\___/  ");
+	s.push_back("");
+	s.push_back("  Coding: Kajetan Krawczyk");
+	s.push_back("  Testing: Michal Radtke");
+	s.push_back("");
+	s.push_back("  \x1B[5m> Press any key to start <");
+	s.push_back("                                ");
+	for (size_t fi = 1; fi < s.size(); fi++) {
+		setcolor(40);
+		for (size_t i = 0; i < (x  - 36)/2; i++) cout << (char)176;
+		setcolor(112);
+		cout << s[fi] << "\n";
+		setcolor(7);
+	}
 	FINISHPRINT;
 }
 
@@ -246,6 +292,16 @@ void Screen::setCursorPosition(int x, int y) {
 	std::cout.flush();
 	COORD coord = { (SHORT)x, (SHORT)y };
 	SetConsoleCursorPosition(hOut, coord);
+}
+
+windowsize Screen::GetWindowSize() {
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	GetConsoleScreenBufferInfo(hOut, &cbsi);
+	windowsize w;
+	w.x = cbsi.srWindow.Right - cbsi.srWindow.Left;
+	w.y = cbsi.srWindow.Bottom - cbsi.srWindow.Top;
+	return w;
 }
 
 void Screen::Fill(bool line = true) {

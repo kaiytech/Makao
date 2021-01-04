@@ -5,12 +5,12 @@
 #include <iostream>
 #include "SocketHandler.h"
 #include "Screen.h"
+#include <conio.h>
 
 int main()
 {
     screen->DisplaySplashScreen();
-
-    Sleep(1000);
+    _getch();
     screen->DisplayWaitScreen();
 
     Handle();
