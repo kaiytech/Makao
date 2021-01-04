@@ -3,8 +3,11 @@
 #include <ctime>
 #include <string>
 #include "Game.h"
+#include "debug.h"
 
 using namespace std;
+
+#define LOG_CONNECTIONS 0
 
 void Handle() {
 	long SUCCESSFUL;
@@ -27,37 +30,25 @@ void Handle() {
 	ADDRESS.sin_addr.S_un.S_addr = inet_addr("192.168.1.77");
 	ADDRESS.sin_family = AF_INET;
 	ADDRESS.sin_port = htons(444);
+	Warn("Launching WinSock at port 444");
 
 	sock_LISTEN = socket(AF_INET, SOCK_STREAM, NULL);
 	bind(sock_LISTEN, (SOCKADDR*)&ADDRESS, sizeof(ADDRESS));
 	listen(sock_LISTEN, SOMAXCONN);
 
 	while (true) {
-		cout << "\n\tSERVER: Waiting for incoming connection...";
+		if(LOG_CONNECTIONS) Msg("Waiting for incoming connection...");
 
 		if (sock_CONNECTION = accept(sock_LISTEN, (SOCKADDR*)&ADDRESS, &AddressSize)) {
 
 			struct sockaddr_in* s = (struct sockaddr_in*)&ADDRESS;
 
-			std::time_t t = std::time(0);
-
-			// _CRT_SECURE_NO_WARNINGS
-			std::tm* now = std::localtime(&t);
-
-			std::string add0 = "";
-			if (now->tm_sec + 1 < 10) add0 = "0";
-
-			cout
-				<< "\n\t"
-				<< "[" << (now->tm_mday) << "-" << (now->tm_mon + 1) << "-" << (now->tm_year + 1900) << " "
-				<< (now->tm_hour) << ":" << (now->tm_min) << ":" << add0 << (now->tm_sec + 1) << "] "
-				<< "Incoming connection from " << inet_ntoa(s->sin_addr) << "..."
-				<< endl;
+			if (LOG_CONNECTIONS) Msg("Incoming connection from " << inet_ntoa(s->sin_addr) << "...");
 			SUCCESSFUL = send(sock_CONNECTION, "Hi", 3, NULL); // dummy response to let the client know we are here.
 			SUCCESSFUL = recv(sock_CONNECTION, message, sizeof(message), NULL); // get the message from the client
 			CONVERTER = message;
 			std::string st = message;
-			cout << "\tMessage from CLIENT: \t" + CONVERTER;
+			if (LOG_CONNECTIONS) Msg("Message from CLIENT: " << CONVERTER);
 
 			bool sendStatus = false;
 			bool lobbyPlayer = false;
@@ -160,7 +151,7 @@ void Handle() {
 
 
 			SUCCESSFUL = send(sock_CONNECTION, response.c_str(), response.length(), NULL); // respond to the clients message
-			cout << "\n\tMessage to CLIENT:   \t" << response << endl;
+			if (LOG_CONNECTIONS) Msg("Message to client: " << response);
 
 			
 		}

@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "debug.h"
 
 #define TURN_TIME 25;
 

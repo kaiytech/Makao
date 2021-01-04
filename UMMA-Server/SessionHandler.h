@@ -4,6 +4,7 @@
 #include <vector>
 #include "Game.h"
 #include "Player.h"
+#include "debug.h"
 
 class SessionHandler {
 public:

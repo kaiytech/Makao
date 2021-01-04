@@ -15,12 +15,17 @@ void Player::AddCard(Card* card) {
 
 // returns true on success, false on failure
 bool Player::RemoveCard(Card* card) {
+	Msg("[P#" << GetId() << "] Removing card " << card->GetString());
 	if (HasCard(card)) {
 		std::vector<Card*>::iterator pos = std::find(vCards.begin(), vCards.end(), card);
 		vCards.erase(pos);
+		Success("[P#" << GetId() << "] Card removed.");
 		return true;
 	}
-	else return false;
+	else {
+		Warn("[P#" << GetId() << "] Attempted to remove a card player doesn't have!");
+		return false;
+	}
 }
 
 bool Player::HasCard(Card* card) {

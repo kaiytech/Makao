@@ -2,6 +2,7 @@
 #define CARD
 
 #include <string>
+#include "debug.h"
 
 enum CARD_TYPE {
 	TYPE_A,

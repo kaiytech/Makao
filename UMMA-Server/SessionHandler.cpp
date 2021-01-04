@@ -22,17 +22,22 @@ SessionHandler::SessionHandler() {
 // Creates a game and returns its ID
 int SessionHandler::CreateGame() {
 	iNumOfGames++;
+	
+	Msg("[S] Creating a new game with an ID" << iNumOfGames);
 	Game* g = new Game(iNumOfGames);
 
 	vGames.push_back(g);
+	Success("[S] New game #" << iNumOfGames << " created!");
 	return iNumOfGames;
 }
 
 // Creates a new player and returns their new ID
 int SessionHandler::CreatePlayer() {
 	iNumOfPlayers++;
+	Msg("[S] Creating a new player with an ID" << iNumOfPlayers);
 	Player* p = new Player(iNumOfPlayers);
 	vPlayers.push_back(p);
+	Success("[S] New player #" << iNumOfPlayers << " created!");
 
 	return iNumOfPlayers;
 }
@@ -103,18 +108,27 @@ bool SessionHandler::ParseAndExecuteJoinLobby(std::string datain) {
 }
 
 bool SessionHandler::JoinLoby(int playerid, int lobbyid) {
+	Msg("[S] Attempting to assign player #" << playerid << " to game #" << lobbyid);
 	Player *player = GetPlayer(playerid);
-	if (!player) return false;
+	if (!player) {
+		Error("[S] Invalid player!");
+		return false;
+	}
 	if (IsPlayerInGame(player)) {
+		Warn("[S] Player already in other game! Kicking.");
 		KickPlayer(playerid);
 	}
 
 	Game* game = GetGame(lobbyid);
-	if (!game) return false;
+	if (!game) {
+		Error("[S] Invalid game!");
+		return false;
+	}
 	return game->AddPlayer(player);
 }
 
 bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
+	Msg("[S] Attempting to promote lobby to a game. Player #" << datain);
 	std::string tocut = datain;
 	int playerid;
 	try {
@@ -131,7 +145,10 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 	}
 
 	Player* p = GetPlayer(playerid);
-	if (!p) return false;
+	if (!p) {
+		Error("[S] Invalid player!");
+		return false;
+	}
 
 	Game* game = NULL;
 
@@ -139,7 +156,10 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 		if (vGames[g]->IsPlayerInGame(p) && (vGames[g]->GetGameHost() == p)) game = vGames[g];
 	}
 
-	if (!game) return false;
+	if (!game) {
+		Warn("[S] Player " << playerid << "can't begin game they're not host of! Aborting.");
+		return false;
+	}
 
 	return game->MakeGame();
 

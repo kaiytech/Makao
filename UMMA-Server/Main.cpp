@@ -6,34 +6,16 @@ using namespace std;
 
 #include "SocketHandler.h"
 #include "SessionHandler.h"
+#include "debug.h"
 
 int main(int argc, char* argv[])
 {
-    std::cout << "========================\n";
-    std::cout << "==   Makao - Server   ==\n";
-    std::cout << "========================\n";
-    std::cout << "=== Kajetan Krawczyk ===\n";
-    std::cout << "==== Michal Radtke =====\n";
-    std::cout << "========================\n";
-
-
-    /*
-    SessionHandler *sh = new SessionHandler();
-    sh->BeginGame();
-    sh->BeginGame();
-    sh->BeginGame();
-
-    Game* g = sh->GetGame(1);
-    if (g == NULL) cout << "null";
-    cout << g->GetId();
-
-    system("pause");
-    return 0;
-    */
-
-
-    string errmsg = "";
-
+    Msg("Makao");
+    Msg("Copyright (C) 2020-2021");
+    Msg("Code: Kajetan Krawczyk");
+    Msg("Testing: Michal Radtke");
+    Msg(" ");
+    Msg("Starting MAKAO SERVER");
 
     Handle();
 
