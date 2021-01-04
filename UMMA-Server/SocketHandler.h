@@ -13,7 +13,6 @@
 #include <Windows.h>
 #include <iostream>
 
-#include "dbAccess.h"
 
 void Handle();
 

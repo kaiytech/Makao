@@ -162,13 +162,6 @@ void Handle() {
 			SUCCESSFUL = send(sock_CONNECTION, response.c_str(), response.length(), NULL); // respond to the clients message
 			cout << "\n\tMessage to CLIENT:   \t" << response << endl;
 
-			if (GetDb()->isConnected()) {
-				GetDb()->UpdateClientEntry(inet_ntoa(s->sin_addr), CONVERTER);
-			}
-			else {
-				cout << endl << "Warning: Not connected to the database!";
-			}
-
 			
 		}
 
