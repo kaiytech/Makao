@@ -5,7 +5,6 @@
 using namespace std;
 
 #include "SocketHandler.h"
-#include "dbAccess.h"
 #include "SessionHandler.h"
 
 int main(int argc, char* argv[])
@@ -34,12 +33,6 @@ int main(int argc, char* argv[])
 
 
     string errmsg = "";
-    if (!GetDb()->isConnected(errmsg)) {
-        cout << "\n\tError connecting to the database:";
-        cout << "\n\t" << errmsg << endl;
-        system("pause");
-        return 0;
-    }
 
 
     Handle();
