@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <WinUser.h>
 #include <tchar.h>
-#include <ctime>
+#include <chrono>
 #include "Game.h"
 #include "Screen.h"
 
@@ -11,7 +11,7 @@
 #define DEBUG_LOG false
 #define KEYPRESSED(x) (GetConsoleWindow() == GetForegroundWindow()) && GetKeyState(x) && GetAsyncKeyState(x)
 
-#define WAIT_TIME 1
+#define WAIT_TIME 500
 
 using namespace std;
 
@@ -48,8 +48,11 @@ void Handle() {
 		while (true)
 		{
 			// if it's stupid but it works then it ain't stupid
-			time_t t = time(NULL);
-			long long int time_target = t + WAIT_TIME;
+			std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (
+				std::chrono::system_clock::now().time_since_epoch()
+				);
+			long long int time_target = ms.count() + WAIT_TIME;
+
 			if(DEBUG_LOG) cout << "Input time.";
 			while (true) {
 				if (bAskForStatus) {
@@ -57,8 +60,10 @@ void Handle() {
 					sprintf_s(msgtosend, "status");
 					break;
 				}
-				time_t time_n = time(NULL);
-				long long int time_now = time_n + 0;
+				std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (
+					std::chrono::system_clock::now().time_since_epoch()
+					);
+				long long int time_now = ms.count() + 0;
 				if (time_now > time_target) {
 
 					if (!game->HasId()) {
