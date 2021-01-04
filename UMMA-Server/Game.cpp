@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <stdlib.h>
 #include "SessionHandler.h"
-#include <time.h>
+#include <chrono>
 
 Game::Game(int id) {
 	iId = id;
@@ -118,8 +118,10 @@ Card* Game::GetCardOnTop() {
 std::string Game::ExecuteMove(std::string datain) {
 	if (datain.rfind("first", 0) == 0) { //first round
 		iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
-		time_t t = time(NULL);
-		iTurnEndTime = t + TURN_TIME;
+		std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> (
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		iTurnEndTime = s.count() + TURN_TIME;
 	}
 	return "";
 }
@@ -171,8 +173,10 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	out.append("|");
 
 	//time
-	time_t t = time(NULL);
-	long long int currentTime = t;
+	std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> (
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	long long int currentTime = s.count();
 	long long int remainingTime = iTurnEndTime - currentTime;
 	out.append(std::to_string(remainingTime));
 	out.append("|"); //wip
