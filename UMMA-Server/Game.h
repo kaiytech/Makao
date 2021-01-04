@@ -7,6 +7,8 @@
 #include <string>
 #include <algorithm>
 
+#define TURN_TIME 25;
+
 enum GAME_TYPE {
 	GAME_NONE,
 	GAME_LOBBY,
@@ -35,6 +37,8 @@ public:
 	bool RemovePlayer(Player* player);
 	bool RemovePlayer(int playerid);
 
+	Card* GetCardOnTop();
+
 	std::string ExecuteMove(std::string datain);
 
 	std::string MsgGetLobbyStatus();
@@ -42,13 +46,23 @@ public:
 
 private:
 	void AddDeck();
+	void Deal();
+	void TransferCardToPlayer(Card* card, Player* player);
+	Card* FindCardToPutOnTop();
+	void PutOnTop(Card* card);
+	void ExecuteFirstMove();
+
 	int iGameHostId;
 
 	int iType;
 	int iId;
 
+	long long int iTurnEndTime;
+
 	std::vector<Player*> vPlayers;
 	std::vector<Card*> vCards;
+	std::vector<Card*> vDeck;
+	Card* pCardOnTop;
 
 	//Game
 	int iTurn;

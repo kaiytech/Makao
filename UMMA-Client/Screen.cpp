@@ -170,8 +170,8 @@ void Screen::DisplayWaitScreen() {
 	FINISHPRINT;
 }
 
-// gamestatus|	1|2|3|		*10|		32|		1|		43|		CA|S0|DK|C4|	*HQ|	X|			0-
-// gamestatus|	...|...|	*gameid|	iturn|	turn|	time|	...|...|		*card|	function|	end-﻿
+// gamestatus|	1|2|3|		*10|		32|		43|		CA|S0|DK|C4|	*HQ|	X|			0-
+// gamestatus|	...|...|	*gameid|	iturn|	time|	...|...|		*card|	function|	end-﻿
 void Screen::DisplayGameScreen(std::string datain) {
 	std::string workingdata = datain;
 	//first cut off the junk data after '-'
@@ -207,16 +207,6 @@ void Screen::DisplayGameScreen(std::string datain) {
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
 		PRINT("Turn number: " << tempstring);
-		workingdata = workingdata.substr(sap + 1, workingdata.length());
-	}
-
-	//print: is it my turn?
-	{
-		int sap = workingdata.find("|");
-		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Is it my turn?: " << (bool)stoi(tempstring) ? "Yes" : "No");
-		//if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No"; 
-		//cout << "\n";
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 

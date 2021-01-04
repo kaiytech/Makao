@@ -1,4 +1,7 @@
 #include "Game.h"
+#include <stdlib.h>
+#include "SessionHandler.h"
+#include <time.h>
 
 Game::Game(int id) {
 	iId = id;
@@ -6,6 +9,7 @@ Game::Game(int id) {
 	iGameHostId = -1;
 	iTurn = 1;
 	iPlayerTurnId = -1;
+	iTurnEndTime = -1;
 }
 
 int Game::GetId() {
@@ -56,10 +60,13 @@ void Game::PrepareCards() {
 	//todo: count how many decks do we need.
 	AddDeck();
 	Shuffle();
+	Deal();
+	PutOnTop(FindCardToPutOnTop());
+	ExecuteFirstMove();
 }
 
 void Game::Shuffle() {
-	std::random_shuffle(vCards.begin(), vCards.end());
+	std::random_shuffle(vDeck.begin(), vDeck.end());
 }
 
 bool Game::IsPlayerInGame(Player* player) {
@@ -101,13 +108,19 @@ bool Game::RemovePlayer(int playerid) {
 	return true; //hm.
 }
 
+Card* Game::GetCardOnTop() {
+	return pCardOnTop;
+}
+
 
 
 // executes the move (or doesn't, if not needed)
 std::string Game::ExecuteMove(std::string datain) {
-	//if (iTurn == 1) { //first round
-	//	iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
-	//}
+	if (datain.rfind("first", 0) == 0) { //first round
+		iPlayerTurnId = vPlayers[0]->GetId(); // the first player begins
+		time_t t = time(NULL);
+		iTurnEndTime = t + TURN_TIME;
+	}
 	return "";
 }
 
@@ -136,15 +149,114 @@ std::string Game::MsgGetLobbyStatus() {
 }
 
 std::string Game::MsgGetGameStatus(int playerid) {
-	return "gamestatus|1|2|3|*10|32|1|43|CA|S0|DK|C4|*HQ|X|0-";
+	std::string out = "gamestatus|";
+	Player* p = GetSessionHandler()->GetPlayer(playerid);
+	Card* cot = GetCardOnTop();
+
+	// playerlist
+	for (size_t i = 0; i < vPlayers.size(); i++) {
+		out.append(std::to_string(vPlayers[i]->GetId()));
+		if (vPlayers[i]->GetId() == iGameHostId) out.append("H");
+		if (vPlayers[i]->GetId() == iPlayerTurnId) out.append("T");
+		out.append("|");
+	}
+	out.append("*");
+
+	//gameid
+	out.append(std::to_string(GetId()));
+	out.append("|");
+
+	//iturn
+	out.append(std::to_string(iTurn));
+	out.append("|");
+
+	//time
+	time_t t = time(NULL);
+	long long int currentTime = t;
+	long long int remainingTime = iTurnEndTime - currentTime;
+	out.append(std::to_string(remainingTime));
+	out.append("|"); //wip
+
+	//cards
+	//todo: if(p)
+	out.append(p->GetCards());
+
+	//current card
+	//todo if(cot)
+	out.append(cot->GetString());
+	out.append("|");
+
+	//card function
+	out.append("X|"); //wip
+
+	//end?
+	out.append("0-"); //wip
+
+	return out;
+	//return "gamestatus|1|2|3|*10|32|43|CA|S0|DK|C4|*HQ|X|0-";
 }
 
 void Game::AddDeck() {
+	int c = 0;
 	for (size_t type = 0; type < TYPE_LENGTH; type++) {
 		for (size_t suit = 0; suit < SUIT_LENGTH; suit++) {
+			// make a new card
 			vCards.push_back(new Card(static_cast<CARD_TYPE>(type), static_cast<CARD_SUIT>(suit)));
+			
+			// and push it to the deck
+			vDeck.push_back(vCards[c]);
+			c++;
 		}
 	}
+}
+
+void Game::Deal() {
+	int c = 0;
+	for (size_t i = 0; i < vPlayers.size(); i++) {
+		for (size_t s = 0; s < 5; s++){
+			TransferCardToPlayer(vDeck[0], vPlayers[i]);
+		}
+	}
+}
+
+void Game::TransferCardToPlayer(Card* card, Player* player) {
+	if (!player) return;
+	if (!card) return;
+
+	player->AddCard(card);
+
+	std::vector<Card*>::iterator pos = std::find(vDeck.begin(), vDeck.end(), card);
+	if (pos != vDeck.end()) {
+		vDeck.erase(pos);
+	}
+	else {
+		// if this happens, something's horribly wrong!!
+		// abort();
+		return;
+	}
+}
+
+Card* Game::FindCardToPutOnTop() {
+	for (size_t i = 0; i < vDeck.size(); i++) {
+		if (vDeck[i]->CanBePutOnTop()) return vDeck[i];
+	}
+
+	// if we didn't find the card to put on top,
+	// then we add one deck and try once again
+	AddDeck();
+	return FindCardToPutOnTop();
+}
+
+void Game::PutOnTop(Card* card) {
+	//pull the current card from the top
+	if (pCardOnTop) {
+		vDeck.push_back(pCardOnTop);
+	}
+	pCardOnTop = card;
+}
+
+void Game::ExecuteFirstMove() {
+	ExecuteMove("first");
 }
 
 Game::~Game() {

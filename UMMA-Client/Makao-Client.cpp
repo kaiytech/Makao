@@ -9,8 +9,8 @@
 
 int main()
 {
-    screen->DisplaySplashScreen();
-    _getch();
+    //screen->DisplaySplashScreen();
+    //_getch();
     screen->DisplayWaitScreen();
 
     Handle();

@@ -35,6 +35,10 @@ public:
 	CARD_TYPE GetType();
 	CARD_SUIT GetSuit();
 
+	std::string GetString();
+
+	bool CanBePutOnTop();
+
 private:
 	CARD_TYPE eType;
 	CARD_SUIT eSuit;
