@@ -142,15 +142,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="SocketHandler.cpp" />
-    <ClCompile Include="Makao-Client.cpp" />
+    <ClCompile Include="CGame.cpp" />
+    <ClCompile Include="CScreen.cpp" />
+    <ClCompile Include="CSocketHandler.cpp" />
+    <ClCompile Include="CMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Screen.h" />
-    <ClInclude Include="SocketHandler.h" />
+    <ClInclude Include="CGame.h" />
+    <ClInclude Include="CScreen.h" />
+    <ClInclude Include="CSocketHandler.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,8 +3,8 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include "SocketHandler.h"
-#include "Screen.h"
+#include "CSocketHandler.h"
+#include "CScreen.h"
 #include <conio.h>
 
 int main()

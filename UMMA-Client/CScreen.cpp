@@ -1,6 +1,6 @@
 ﻿#include <iostream>
-#include "Screen.h"
-#include "Game.h"
+#include "CScreen.h"
+#include "CGame.h"
 #include <string>
 #include <Windows.h>
 

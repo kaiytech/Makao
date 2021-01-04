@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "CGame.h"
 
 static Game* g = 0;
 Game* GetGame() {

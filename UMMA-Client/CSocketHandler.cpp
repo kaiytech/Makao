@@ -1,10 +1,10 @@
-﻿#include "SocketHandler.h"
+﻿#include "CSocketHandler.h"
 #include <windows.h>
 #include <WinUser.h>
 #include <tchar.h>
 #include <chrono>
-#include "Game.h"
-#include "Screen.h"
+#include "CGame.h"
+#include "CScreen.h"
 
 #define INFO_BUFFER_SIZE MAX_COMPUTERNAME_LENGTH + 1
 #define SERVER_IP "192.168.1.77"
