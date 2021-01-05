@@ -148,6 +148,7 @@ std::string Game::ExecuteMove(std::string datain) {
 
 	// playing the card
 	if (datain.rfind("playcard|", 0) == 0) {
+		Msg("[G#" << GetId() << "] Playing card...");
 		std::string s = datain;
 		int sap = s.find("|");
 		s = s.substr(sap + 1, s.length());
@@ -186,7 +187,10 @@ std::string Game::ExecuteMove(std::string datain) {
 			return "AFS";
 		}
 
-		//todo: check if we can actualy put this card on top
+		if (!Validate(c)) {
+			Warn("[G#" << GetId() << "] Can't finish move: player tried to play mismatched card");
+			return "AFS";
+		}
 
 		PutOnTop(c);
 		if (!pPlayer->RemoveCard(c)) {
@@ -204,10 +208,63 @@ std::string Game::ExecuteMove(std::string datain) {
 		return MsgGetGameStatus(pPlayer->GetId());
 	}
 
+	if (datain.rfind("drawcard|", 0) == 0) {
+		Msg("[G#" << GetId() << "] Drawing a card...");
+		std::string s = datain;
+		int sap = s.find("|");
+		s = s.substr(sap + 1, s.length());
+
+		sap = s.find("|");
+		std::string stringid = s.substr(0, sap);
+		int playerid;
+		try { playerid = stoi(stringid); }
+		catch (const std::invalid_argument& ia) { return "AFS"; }
+		catch (const std::out_of_range& oor) { return "AFS"; }
+		catch (const std::exception& e) { return "AFS"; }
+
+		Player* pPlayer = GetSessionHandler()->GetPlayer(playerid);
+		if (!pPlayer) {
+			Warn("[G#" << GetId() << "] Can't finish move: unknown player");
+			return "AFS";
+		}
+
+		if (pPlayer->GetId() != iPlayerTurnId) {
+			Warn("[G#" << GetId() << "] Can't finish move: it's not player #" << pPlayer->GetId() << "s move!");
+			return "AFS";
+		}
+
+		Card* card = vDeck[0];
+		if (!card) {
+			Error("[G#" << GetId() << "] Can't finish move: can't pull a new card!");
+			return "AFS";
+		}
+
+		TransferCardToPlayer(card, pPlayer);
+
+		std::chrono::seconds s3 = std::chrono::duration_cast<std::chrono::seconds> (
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		iTurnEndTime = s3.count() + TURN_TIME;
+
+		PassTurn();
+		Success("[G#" << GetId() << "] Move execution finished!");
+		return MsgGetGameStatus(pPlayer->GetId());
+	}
+
 
 
 	Success("[G#" << GetId() << "] Move execution finished!");
 	return "AFS";
+}
+
+bool Game::Validate(Card* card) {
+	if (
+		card->GetSuit() == pCardOnTop->GetSuit()
+		||
+		card->GetType() == pCardOnTop->GetType()
+		) return true;
+
+	else return false;
 }
 
 
@@ -253,6 +310,17 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	Player* p = GetSessionHandler()->GetPlayer(playerid);
 	Card* cot = GetCardOnTop();
 
+	std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> (
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	long long int currentTime = s.count();
+	long long int remainingTime = iTurnEndTime - currentTime;
+	if (remainingTime < 1) {
+		iTurnEndTime = s.count() + TURN_TIME;
+		PassTurn();
+		return MsgGetGameStatus(playerid);
+	}
+
 	// playerlist
 	for (size_t i = 0; i < vPlayers.size(); i++) {
 		out.append(std::to_string(vPlayers[i]->GetId()));
@@ -271,13 +339,8 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	out.append("|");
 
 	//time
-	std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> (
-		std::chrono::system_clock::now().time_since_epoch()
-		);
-	long long int currentTime = s.count();
-	long long int remainingTime = iTurnEndTime - currentTime;
 	out.append(std::to_string(remainingTime));
-	out.append("|"); //wip
+	out.append("|");
 
 	//cards
 	//todo: if(p)

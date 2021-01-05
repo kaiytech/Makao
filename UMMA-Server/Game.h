@@ -41,6 +41,7 @@ public:
 	Card* GetCardOnTop();
 
 	std::string ExecuteMove(std::string datain);
+	bool Validate(Card *card);
 	void PassTurn();
 
 	std::string MsgGetLobbyStatus();

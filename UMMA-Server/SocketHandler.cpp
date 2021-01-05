@@ -149,7 +149,7 @@ void Handle() {
 				response = "AFS";
 			}
 
-			if(st.rfind("playcard|", 0) == 0) {
+			if((st.rfind("playcard|", 0) == 0) || (st.rfind("drawcard|", 0) == 0)) {
 				response = GetSessionHandler()->ParseAndExecuteMove(st);
 			}
 
