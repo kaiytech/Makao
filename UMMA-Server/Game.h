@@ -41,6 +41,7 @@ public:
 	Card* GetCardOnTop();
 
 	std::string ExecuteMove(std::string datain);
+	void PassTurn();
 
 	std::string MsgGetLobbyStatus();
 	std::string MsgGetGameStatus(int playerid);
@@ -49,6 +50,7 @@ private:
 	void AddDeck();
 	void Deal();
 	void TransferCardToPlayer(Card* card, Player* player);
+	void TransferCardFromPlayer(Card* card, Player* player);
 	Card* FindCardToPutOnTop();
 	void PutOnTop(Card* card);
 	void ExecuteFirstMove();

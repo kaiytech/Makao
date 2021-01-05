@@ -149,6 +149,10 @@ void Handle() {
 				response = "AFS";
 			}
 
+			if(st.rfind("playcard|", 0) == 0) {
+				response = GetSessionHandler()->ParseAndExecuteMove(st);
+			}
+
 
 			SUCCESSFUL = send(sock_CONNECTION, response.c_str(), response.length(), NULL); // respond to the clients message
 			if (LOG_CONNECTIONS) Msg("Message to client: " << response);

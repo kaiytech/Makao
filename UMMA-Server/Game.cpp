@@ -142,9 +142,86 @@ std::string Game::ExecuteMove(std::string datain) {
 			std::chrono::system_clock::now().time_since_epoch()
 			);
 		iTurnEndTime = s.count() + TURN_TIME;
+		Success("[G#" << GetId() << "] Move execution finished!");
+		return "AFS";
 	}
+
+	// playing the card
+	if (datain.rfind("playcard|", 0) == 0) {
+		std::string s = datain;
+		int sap = s.find("|");
+		s = s.substr(sap + 1, s.length());
+
+		sap = s.find("|");
+		std::string stringid = s.substr(0, sap);
+		int playerid;
+		try { playerid = stoi(stringid); }
+		catch (const std::invalid_argument& ia) { return "AFS"; }
+		catch (const std::out_of_range& oor) { return "AFS"; }
+		catch (const std::exception& e) { return "AFS"; }
+
+		Player* pPlayer = GetSessionHandler()->GetPlayer(playerid);
+		if (!pPlayer) {
+			Warn("[G#" << GetId() << "] Can't finish move: unknown player");
+			return "AFS";
+		}
+
+		if (iPlayerTurnId != pPlayer->GetId()) {
+			Warn("[G#" << GetId() << "] Can't finish move: it's not player #" << pPlayer->GetId() << "s move!");
+			return "AFS";
+		}
+		
+		if (!IsPlayerInGame(pPlayer)) {
+			Warn("[G#" << GetId() << "] Can't finish move: player not in game");
+			return "AFS";
+		}
+		
+		s = s.substr(sap + 1, s.length());
+		sap = s.find("|");
+		std::string card = s.substr(0, sap);
+		
+		Card* c = pPlayer->GetCard(stoi(s)-1);
+		if (!c) {
+			Warn("[G#" << GetId() << "] Can't finish move: player tried to play unknown card");
+			return "AFS";
+		}
+
+		//todo: check if we can actualy put this card on top
+
+		PutOnTop(c);
+		if (!pPlayer->RemoveCard(c)) {
+			Warn("[G#" << GetId() << "] Can't finish move: Player doesn't have the card");
+			return "AFS";
+		}
+
+		std::chrono::seconds s2 = std::chrono::duration_cast<std::chrono::seconds> (
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		iTurnEndTime = s2.count() + TURN_TIME;
+
+		PassTurn();
+		Success("[G#" << GetId() << "] Move execution finished!");
+		return MsgGetGameStatus(pPlayer->GetId());
+	}
+
+
+
 	Success("[G#" << GetId() << "] Move execution finished!");
-	return "";
+	return "AFS";
+}
+
+
+void Game::PassTurn() {
+	int iTurn = -1;
+	for (int i = 0; i < vPlayers.size(); i++) {
+		if (vPlayers[i]->GetId() == iPlayerTurnId) iTurn = i;
+	}
+	if (iTurn == -1) return;
+
+	if (iTurn == vPlayers.size()-1) iPlayerTurnId = vPlayers[0]->GetId();
+	else iPlayerTurnId = vPlayers[iTurn + 1]->GetId();
+
+	return;
 }
 
 

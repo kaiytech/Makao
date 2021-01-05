@@ -131,18 +131,10 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 	Msg("[S] Attempting to promote lobby to a game. Player #" << datain);
 	std::string tocut = datain;
 	int playerid;
-	try {
-		playerid = stoi(tocut);
-	}
-	catch (const std::invalid_argument& ia) {
-		return false;
-	}
-	catch (const std::out_of_range& oor) {
-		return false;
-	}
-	catch (const std::exception& e) {
-		return false;
-	}
+	try { playerid = stoi(tocut); }
+	catch (const std::invalid_argument& ia) { return false; }
+	catch (const std::out_of_range& oor) { return false; }
+	catch (const std::exception& e) { return false; }
 
 	Player* p = GetPlayer(playerid);
 	if (!p) {
@@ -163,6 +155,27 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 
 	return game->MakeGame();
 
+}
+
+std::string SessionHandler::ParseAndExecuteMove(std::string datain) {
+	std::string s = datain;
+	int sap = s.find("|");
+	s = s.substr(sap + 1, s.length());
+
+	sap = s.find("|");
+	std::string stringid = s.substr(0, sap);
+	int playerid;
+	try { playerid = stoi(stringid); }
+	catch (const std::invalid_argument& ia) { return "AFS"; }
+	catch (const std::out_of_range& oor) { return "AFS"; }
+	catch (const std::exception& e) { return "AFS"; }
+
+	Player* pPlayer = GetPlayer(playerid);
+	if (!pPlayer) return "AFS";
+	Game * pGame = IsPlayerInGame(pPlayer);
+	if (!pGame) return "AFS";
+
+	return pGame->ExecuteMove(datain);
 }
 
 // Destructor

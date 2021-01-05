@@ -36,6 +36,26 @@ bool Player::HasCard(Card* card) {
 	else return false;
 }
 
+// returns card if player has it
+// returns null if not
+Card* Player::HasCard(std::string datain) {
+	for (size_t i = 0; i < vCards.size(); i++) {
+		if (datain.compare(vCards[i]->GetString()) == 0) {
+			return vCards[i];
+		}
+	}
+	return NULL;
+}
+
+Card* Player::GetCard(int index) {
+	Card* c;
+	if (vCards.empty()) return NULL;
+	if (index < 0 || index > vCards.size() - 1) return NULL;
+	c = vCards.at(index);
+	if (!c) return NULL;
+	return c;
+}
+
 int Player::GetCardAmount() {
 	int c = 0;
 	for (size_t i = 0; i < vCards.size(); i++) {

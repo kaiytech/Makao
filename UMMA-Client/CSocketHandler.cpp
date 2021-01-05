@@ -57,7 +57,7 @@ void Handle() {
 			while (true) {
 				if (bAskForStatus) {
 					bAskForStatus = false;
-					sprintf_s(msgtosend, "status");
+					sprintf_s(msgtosend, "status|%i", game->GetId());
 					break;
 				}
 				std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds> (
@@ -127,6 +127,21 @@ void Handle() {
 						game->SetInLobbyList(false);
 						break;
 					}
+				}
+
+				if (game->HasId() && game->IsInGame()) {
+					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "1"); break; } // play card 1
+					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "2"); break; } // play card 2
+					if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "3"); break; } // play card 3
+					if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "4"); break; } // play card 4
+					if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "5"); break; } // play card 5
+					if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "6"); break; } // play card 6
+					if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "7"); break; } // play card 7
+					if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "8"); break; } // play card 8
+					if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "9"); break; } // play card 9
+					if (KEYPRESSED(0x5A)) { sprintf_s(msgtosend, "drawcard|%i", game->GetId()); break; } // draw card (Z)
+					if (KEYPRESSED(0x58)) { sprintf_s(msgtosend, "leavegame|%i", game->GetId()); break; } // leave game (X)
+
 				}
 			}
 			if(DEBUG_LOG) cout << "\nSending input: " << msgtosend << ".";
@@ -203,6 +218,9 @@ void Handle() {
 			std::string tosend = st.substr(11, st.length());
 			//todo: game actions
 			screen->DisplayGameScreen(tosend);
+			game->SetInGame(true);
+			game->SetInLobby(false);
+			game->SetInLobbyList(false);
 
 		}
 

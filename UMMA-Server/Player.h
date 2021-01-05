@@ -13,6 +13,8 @@ public:
 	bool RemoveCard(Card* card);
 
 	bool HasCard(Card* card);
+	Card* HasCard(std::string datain);
+	Card* GetCard(int index);
 	int GetCardAmount();
 	std::string GetCards();
 
