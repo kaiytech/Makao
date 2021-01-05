@@ -115,14 +115,14 @@ void Handle() {
 				if (game->HasId() && game->IsInLobbyList()) {
 					//todo: 1-9
 					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break;  } // 1
-					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 2
-					if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 3
-					if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 4
-					if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 5
-					if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 6
-					if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 7
-					if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 8
-					if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l1); break; } // 9
+					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l2); break; } // 2
+					if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l3); break; } // 3
+					if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l4); break; } // 4
+					if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l5); break; } // 5
+					if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l6); break; } // 6
+					if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l7); break; } // 7
+					if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l8); break; } // 8
+					if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "joinlobby|%i|%i", game->GetId(), l.l9); break; } // 9
 					if (KEYPRESSED(0x30)) { // 0
 						game->SetInLobbyList(false);
 						break;
