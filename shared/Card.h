@@ -1,6 +1,12 @@
 #ifndef CARD
 #define CARD
 
+#ifdef CLIENT
+// if CScreen.h can't be found, make sure the client has $(ProjectDir)
+// added in include paths
+#include "CScreen.h"
+#endif
+
 #include <string>
 
 enum CARD_TYPE {
@@ -28,6 +34,7 @@ enum CARD_SUIT {
 	SUIT_LENGTH // this has to be last!!
 };
 
+
 class Card {
 public:
 	Card(CARD_TYPE type, CARD_SUIT suit);
@@ -38,6 +45,14 @@ public:
 	std::string GetString();
 
 	bool CanBePutOnTop();
+
+	#ifdef CLIENT
+	void PrintBig();
+	void PrintSmall();
+	std::string GetTypeText();
+	void PrintSuit();
+	#endif 
+
 
 private:
 	CARD_TYPE eType;

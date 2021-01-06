@@ -7,8 +7,6 @@
 #include <io.h>
 
 #include <stdio.h>
-#include <io.h> //for _setmode
-#include <fcntl.h> //for _O_U16TEXT
 
 using namespace std;
 
@@ -262,8 +260,51 @@ void Screen::DisplayGameScreen(std::string datain) {
 	//print current card
 	{
 		int sap = workingdata.find("|");
-		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Current card: " << tempstring);
+		//std::string tempstring = workingdata.substr(0, sap);
+		//PRINT("Current card: " << tempstring);
+
+		cout << "         ";
+		Card* c1 = new Card(TYPE_A, SUIT_HEART);
+		c1->PrintBig();
+
+		Card *c2 = new Card(TYPE_2, SUIT_CLUB);
+		c2->PrintBig();
+
+		Card* c3 = new Card(TYPE_3, SUIT_DIAMOND);
+		c3->PrintBig();
+
+		Card* c4 = new Card(TYPE_4, SUIT_SPADE);
+		c4->PrintBig();
+
+		Card* c5 = new Card(TYPE_5, SUIT_HEART);
+		c5->PrintBig();
+
+		Card* c6 = new Card(TYPE_6, SUIT_CLUB);
+		c6->PrintBig();
+
+		Card* c7 = new Card(TYPE_7, SUIT_DIAMOND);
+		c7->PrintBig();
+
+		Card* c8 = new Card(TYPE_8, SUIT_SPADE);
+		c8->PrintBig();
+
+		Card* c9 = new Card(TYPE_9, SUIT_HEART);
+		c9->PrintBig();
+
+		Card* c10 = new Card(TYPE_10, SUIT_CLUB);
+		c10->PrintBig();
+
+		Card* cJ = new Card(TYPE_J, SUIT_DIAMOND);
+		cJ->PrintBig();
+
+		Card* cQ = new Card(TYPE_Q, SUIT_SPADE);
+		cQ->PrintBig();
+
+		Card* cK = new Card(TYPE_K, SUIT_HEART);
+		cK->PrintBig();
+
+
+
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 

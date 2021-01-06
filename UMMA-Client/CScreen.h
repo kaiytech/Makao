@@ -3,6 +3,11 @@
 
 #include <Windows.h>
 #include <vector>
+#include "../shared/Card.h"
+#include <iostream>
+#include <io.h> //for _setmode
+#include <fcntl.h> //for _O_U16TEXT
+#include <string>
 
 #define screen GetScreen()
 
@@ -33,6 +38,7 @@ struct windowsize {
 };
 
 class Screen {
+	friend class Card;
 public:
 	Screen();
 public:
@@ -44,9 +50,10 @@ public:
 
 	void DisplayGameScreen(std::string datain);
 
+
 private:
-	COORD GetConsoleCursorPosition(HANDLE hConsoleOutput);
-	void setCursorPosition(int x, int y);
+	static COORD GetConsoleCursorPosition(HANDLE hConsoleOutput);
+	static void setCursorPosition(int x, int y);
 	windowsize GetWindowSize();
 	void Fill(bool line);
 	/*
@@ -70,7 +77,6 @@ private:
     Intense White    -           15
 	finalcolor = 16*bgcolor + fgcolor
 	*/
-
 	void setcolor(int color) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 		return;
