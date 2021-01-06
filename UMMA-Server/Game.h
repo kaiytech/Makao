@@ -2,7 +2,7 @@
 #define GAME
 
 #include "Player.h"
-#include "Card.h"
+#include "../shared/Card.h"
 #include <vector>
 #include <string>
 #include <algorithm>

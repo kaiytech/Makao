@@ -1,7 +1,7 @@
 #ifndef  PLAYER
 #define PLAYER
 #include <vector>
-#include "Card.h"
+#include "../shared/Card.h"
 #include "debug.h"
 
 class Player {

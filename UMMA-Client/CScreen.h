@@ -6,6 +6,15 @@
 
 #define screen GetScreen()
 
+#define SPADE L"\u2660"
+#define CLUB L"\u2663"
+#define HEART L"\u2665"
+#define DIAMOND L"\u2666"
+
+#define PRINT_SUIT(x)	_setmode(_fileno(stdout), _O_U16TEXT); \
+						wcout << x; \
+						_setmode(_fileno(stdout), _O_TEXT);
+
 struct lobbylist {
 	int l1;
 	int l2;

@@ -3,6 +3,8 @@
 #include "CGame.h"
 #include <string>
 #include <Windows.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include <stdio.h>
 #include <io.h> //for _setmode
@@ -39,6 +41,7 @@ Screen::Screen() {
 	cfi.dwFontSize.Y = 24;
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
+	wcscpy_s(cfi.FaceName, L"Lucida Console");
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 
 	// console size
@@ -228,7 +231,28 @@ void Screen::DisplayGameScreen(std::string datain) {
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
-			PRINT(playerindicator << ". " << tempstring);
+			cout << playerindicator << ". ";
+
+			if (tempstring.rfind("C", 0) == 0) {
+				setcolor(112);
+				PRINT_SUIT(CLUB);
+			}
+			else if (tempstring.rfind("H", 0) == 0) {
+				setcolor(116);
+				PRINT_SUIT(HEART);
+			}
+			else if (tempstring.rfind("S", 0) == 0) {
+				setcolor(112);
+				PRINT_SUIT(SPADE);
+			}
+			else if (tempstring.rfind("D", 0) == 0) {
+				setcolor(116);
+				PRINT_SUIT(DIAMOND);
+			}
+
+			cout << tempstring.substr(1, tempstring.length());
+			setcolor(7);
+			PRINT(""); //fill
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
 		}

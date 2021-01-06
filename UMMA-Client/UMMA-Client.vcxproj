@@ -142,12 +142,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\shared\Card.cpp" />
     <ClCompile Include="CGame.cpp" />
     <ClCompile Include="CScreen.cpp" />
     <ClCompile Include="CSocketHandler.cpp" />
     <ClCompile Include="CMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\shared\Card.h" />
     <ClInclude Include="CGame.h" />
     <ClInclude Include="CScreen.h" />
     <ClInclude Include="CSocketHandler.h" />
