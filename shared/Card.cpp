@@ -79,6 +79,8 @@ void Card::PrintBig() {
 	PrintSuit();
 	cout << GetTypeText();
 	if (eType == TYPE_10) { cout << "    "; }
+	else if (eType == TYPE_K) { cout << "   WW"; }
+	else if (eType == TYPE_J || eType == TYPE_Q) { cout << "   ww"; }
 	else {					cout << "     "; }
 
 	// drop shadow
@@ -92,6 +94,8 @@ void Card::PrintBig() {
 	if (eType == TYPE_2 || eType == TYPE_3) { cout << "   "; PrintSuit(); cout << "   "; }
 	else if (eType == TYPE_4 || eType == TYPE_5 || eType == TYPE_6) { cout << "  "; PrintSuit(); cout << " "; PrintSuit(); cout << "  "; }
 	else if (eType == TYPE_7 || eType == TYPE_8 || eType == TYPE_9 || eType == TYPE_10) { cout << "  "; PrintSuit(); PrintSuit(); PrintSuit(); cout << "  "; }
+	else if (eType == TYPE_J || eType == TYPE_K) { cout << "   ^ {)"; }
+	else if (eType == TYPE_Q) { cout << "   ^ {("; }
 	else { cout << "       "; }
 
 	// drop shadow
@@ -106,6 +110,8 @@ void Card::PrintBig() {
 	else if (eType == TYPE_6 || eType == TYPE_8) { cout << "  "; PrintSuit(); cout << " "; PrintSuit(); cout << "  "; }
 	else if (eType == TYPE_10) { cout << " "; PrintSuit(); PrintSuit(); cout << " "; PrintSuit(); PrintSuit(); cout << " "; }
 	else if (eType == TYPE_9) { cout << "  "; PrintSuit(); PrintSuit(); PrintSuit(); cout << "  "; }
+	else if (eType == TYPE_J) { cout << "  ("; PrintSuit();  cout << ")% "; }
+	else if (eType == TYPE_Q || eType == TYPE_K) { cout << "  ("; PrintSuit();  cout << ")%%"; }
 	else cout << "       ";
 
 	// drop shadow
@@ -118,6 +124,8 @@ void Card::PrintBig() {
 	if (eType == TYPE_2 || eType == TYPE_3) { cout << "   "; PrintSuit(); cout << "   "; }
 	else if (eType == TYPE_4 || eType == TYPE_5 || eType == TYPE_6) { cout << "  "; PrintSuit(); cout << " "; PrintSuit(); cout << "  "; }
 	else if (eType == TYPE_7 || eType == TYPE_8 || eType == TYPE_9 || eType == TYPE_10) { cout << "  "; PrintSuit(); PrintSuit(); PrintSuit(); cout << "  "; }
+	else if (eType == TYPE_J) { cout << "   | % "; }
+	else if (eType == TYPE_Q || eType == TYPE_K) { cout << "   |%%%"; }
 	else { cout << "       "; }
 
 	// drop shadow
@@ -127,7 +135,9 @@ void Card::PrintBig() {
 
 	// fifth line of card
 	screen->setCursorPosition(c.X, c.Y + 4);
-	if (eType == TYPE_10) { cout << "       "; }
+	if (eType == TYPE_J) { cout << "    %%["; }
+	else if (eType == TYPE_Q) { cout << "   %%%O"; }
+	else if (eType == TYPE_K) { cout << "   %%%>"; }
 	else { cout << "       "; }
 
 	screen->setcolor(8);
@@ -140,7 +150,7 @@ void Card::PrintBig() {
 	cout << char(223) << char(223) << char(223) << char(223) << char(223) << char(223) << char(223);
 	screen->setcolor(7);
 
-	screen->setCursorPosition(c.X, c.Y + 6);
+	screen->setCursorPosition(0, c.Y + 6);
 	
 	//screen->setCursorPosition(c.X + 8, c.Y);
 
