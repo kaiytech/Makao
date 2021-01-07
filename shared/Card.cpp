@@ -158,8 +158,32 @@ void Card::PrintBig() {
 
 // prints the small card right where the cursor is
 // moves cursor to the right, where the next small card should be
-void Card::PrintSmall() {
+void Card::PrintSmall(int i) {
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD c = screen->GetConsoleCursorPosition(hOut);
 
+	int startx, starty;
+	startx = c.X;
+	starty = c.Y;
+
+	int color = 0;
+	if (eSuit == SUIT_CLUB || eSuit == SUIT_SPADE) color = 112;
+	else color = 116;
+
+	// first (and the only) line of card
+	cout << i << ".";
+	screen->setCursorPosition(c.X, c.Y + 1);
+	screen->setcolor(color);
+	PrintSuit();
+	cout << GetTypeText();
+	if (eType == TYPE_10) cout << " ";
+	else cout << "  ";
+
+	screen->setcolor(8);
+	cout << char(220);
+	screen->setcolor(7);
+
+	screen->setCursorPosition(startx + 5, starty);
 }
 
 

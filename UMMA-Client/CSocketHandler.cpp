@@ -217,6 +217,7 @@ void Handle() {
 		else if (st.rfind("gamestatus|", 0) == 0) {
 			std::string tosend = st.substr(11, st.length());
 			//todo: game actions
+			if (!game->IsInGame()) screen->ClearScreen();
 			screen->DisplayGameScreen(tosend);
 			game->SetInGame(true);
 			game->SetInLobby(false);

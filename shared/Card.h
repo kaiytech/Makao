@@ -48,7 +48,7 @@ public:
 
 	#ifdef CLIENT
 	void PrintBig();
-	void PrintSmall();
+	void PrintSmall(int i);
 	std::string GetTypeText();
 	void PrintSuit();
 

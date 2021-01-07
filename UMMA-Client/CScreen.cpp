@@ -171,26 +171,56 @@ void Screen::DisplayWaitScreen() {
 	FINISHPRINT;
 }
 
+// don't use frequently as it causes blinking!!!
+void Screen::ClearScreen() {
+	for (size_t y = 0; y < GetWindowSize().y; y++){
+		for (size_t x = 0; x < GetWindowSize().x; x++){
+			cout << " ";
+		}
+		cout << "\n";
+	}
+}
+
 // gamestatus|	1|2|3|		*10|		32|		43|		CA|S0|DK|C4|	*HQ|	X|			0-
 // gamestatus|	...|...|	*gameid|	iturn|	time|	...|...|		*card|	function|	end-﻿
 void Screen::DisplayGameScreen(std::string datain) {
 	std::string workingdata = datain;
 	//first cut off the junk data after '-'
 	workingdata = workingdata.substr(0, workingdata.find("-") + 1);
-
+	cout << "\n\n\n\n\n\n\n\n";
 	//print player list
 	{
-		PRINT("Players:");
+		//PRINT("Players:");
+		setCursorPosition(GetWindowSize().x - 14, 2);
+		cout << "Players:";
 		int endOfPlayerList = workingdata.find("*");
 		std::string playerlist = workingdata.substr(0, endOfPlayerList);
 		int playerindicator = 1;
+		int ypos = 3;
 		while (true) {
+			setCursorPosition(GetWindowSize().x - 14, ypos);
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
-			PRINT(playerindicator << ". " << tempstring);
+
+			std::string host = "H"; bool bhost = false;
+			std::string turn = "T"; bool bturn = false;
+			if (tempstring.find(turn) != std::string::npos) {
+				host = true;
+				tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'T'), tempstring.end());
+			}
+			if (tempstring.find(host) != std::string::npos) { 
+				turn = true; 
+				tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'H'), tempstring.end());
+			}
+
+			if (bturn) cout << ">";
+			cout << playerindicator << ". P#" + tempstring;
+			if (bhost) cout << " (Host)";
+
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
+			ypos++;
 		}
 		workingdata = workingdata.substr(endOfPlayerList + 1, workingdata.length());
 	}
@@ -199,7 +229,19 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Game ID: " << tempstring);
+		setCursorPosition(0, 0);
+		setcolor(32);
+		cout << char(254);
+		setcolor(32);
+		PRINT(" |MAKAO|    Game #" << tempstring);
+		setcolor(8);
+
+		for (size_t i = 0; i < GetWindowSize().x; i++) {
+			cout << char(223);
+		}
+
+		setcolor(7);
+		//PRINT("Game ID: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -207,7 +249,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Turn number: " << tempstring);
+		//PRINT("Turn number: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -215,45 +257,42 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Remaining time: " << tempstring << "s");
+		setCursorPosition(GetWindowSize().x-14, 10);
+		PRINT("Time left: " << tempstring << "s");
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
 	//print player cards
 	{
-		PRINT("Player cards:");
+		setCursorPosition(0, 14);
+		PRINT(""); PRINT("");
+		setCursorPosition(0, 14);
+
+		//PRINT("Player cards:");
 		int endOfCardList = workingdata.find("*");
 		std::string playerlist = workingdata.substr(0, endOfCardList);
 		int playerindicator = 1;
+		cout << " ";
 		while (true) {
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
-			cout << playerindicator << ". ";
-
-			if (tempstring.rfind("C", 0) == 0) {
-				setcolor(112);
-				PRINT_SUIT(CLUB);
-			}
-			else if (tempstring.rfind("H", 0) == 0) {
-				setcolor(116);
-				PRINT_SUIT(HEART);
-			}
-			else if (tempstring.rfind("S", 0) == 0) {
-				setcolor(112);
-				PRINT_SUIT(SPADE);
-			}
-			else if (tempstring.rfind("D", 0) == 0) {
-				setcolor(116);
-				PRINT_SUIT(DIAMOND);
-			}
-
-			cout << tempstring.substr(1, tempstring.length());
-			setcolor(7);
-			PRINT(""); //fill
+			Card* c = Card::GetCardFromString(tempstring);
+			if (c) c->PrintSmall(playerindicator);
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
 		}
+		cout << "\n\n";
+		setcolor(6);
+		windowsize w = GetWindowSize();
+		for (size_t i = 0; i < w.x; i++){
+			cout << char(223);
+		}
+		cout << "\n";
+
+		cout << " (1-9) - play card    (0) - next page\n (z)   - draw card    (x) - forfeit";
+		setcolor(7);
+
 		workingdata = workingdata.substr(endOfCardList + 1, workingdata.length());
 	}
 
@@ -263,9 +302,10 @@ void Screen::DisplayGameScreen(std::string datain) {
 		std::string tempstring = workingdata.substr(0, sap);
 		//PRINT("Current card: " << tempstring);
 
-		cout << "         ";
+		setcolor(7);
+		setCursorPosition(4, 4);
 		Card* c = Card::GetCardFromString(tempstring);
-		c->PrintBig();
+		if(c) c->PrintBig();
 
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
@@ -274,7 +314,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Card function: " << tempstring);
+		//PRINT("Card function: " << tempstring);
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -282,13 +322,13 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("-");
 		std::string tempstring = workingdata.substr(0, sap);
-		PRINT("Has the game ended?: " << (bool)stoi(tempstring) ? "Yes" : "No");
+		//PRINT("Has the game ended?: " << (bool)stoi(tempstring) ? "Yes" : "No");
 		//if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No";
 		//cout << "\n";
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
-	FINISHPRINT;
+	//FINISHPRINT;
 }
 
 COORD Screen::GetConsoleCursorPosition(HANDLE hConsoleOutput)
