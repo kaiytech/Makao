@@ -267,7 +267,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 		Card* c1 = new Card(TYPE_A, SUIT_HEART);
 		c1->PrintBig();
 
-		Card *c2 = new Card(TYPE_2, SUIT_CLUB);
+		/*Card *c2 = new Card(TYPE_2, SUIT_CLUB);
 		c2->PrintBig();
 
 		Card* c3 = new Card(TYPE_3, SUIT_DIAMOND);
@@ -301,7 +301,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 		cQ->PrintBig();
 
 		Card* cK = new Card(TYPE_K, SUIT_HEART);
-		cK->PrintBig();
+		cK->PrintBig();*/
 
 
 
@@ -379,9 +379,11 @@ void Screen::Fill(bool line = true) {
 		int linesToDo = cbsi.srWindow.Bottom - cbsi.srWindow.Top - c.Y;
 		int spacesToDo = cbsi.srWindow.Right - cbsi.srWindow.Left;
 		std::string r = "";
-		for (size_t i = 0; i < linesToDo; i++) {
-			for (size_t i = 0; i < spacesToDo; i++) {
-				r.append(" ");
+		if (linesToDo > 0) {
+			for (size_t i = 0; i < linesToDo; i++) {
+				for (size_t i = 0; i < spacesToDo; i++) {
+					r.append(" ");
+				}
 			}
 		}
 		r.append("\n");
