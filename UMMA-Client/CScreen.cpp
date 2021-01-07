@@ -142,7 +142,7 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 		std::string rid = r.substr(0, r.find("+"));
 		std::string rpn = r.substr(r.find("+") + 1, r.length());
 
-		PRINT(num << " Pokoj #" << rid << " (" << rpn << " graczy)");
+		PRINT(num << " Pokoj #" << rid << " (" << rpn << "/6 graczy)");
 		rooms = rooms.substr(sap + 1, rooms.length());
 
 		// this is embarassing

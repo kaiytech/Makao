@@ -99,6 +99,11 @@ bool Game::AddPlayer(Player *player) {
 
 	int pid = player->GetId();
 
+	if (GetAmountOfPlayers() > 5) {
+		Msg("[G#" << GetId() << "] Player limit in one game reached.");
+		return false;
+	}
+
 	// check if the player isn't already in the game
 	for (int i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == pid) {
@@ -124,6 +129,10 @@ bool Game::RemovePlayer(int playerid) {
 	}
 	Success("[G#" << GetId() << "] Player #" << playerid << " removed from the game");
 	return true; //hm.
+}
+
+int Game::GetAmountOfPlayers() {
+	return vPlayers.size();
 }
 
 Card* Game::GetCardOnTop() {

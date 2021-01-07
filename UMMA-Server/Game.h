@@ -37,6 +37,7 @@ public:
 	bool AddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
 	bool RemovePlayer(int playerid);
+	int GetAmountOfPlayers();
 
 	Card* GetCardOnTop();
 
