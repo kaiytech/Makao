@@ -123,10 +123,6 @@ void Handle() {
 			}
 
 			if (st.rfind("lobbylist|", 0) == 0) {
-				std::string player = st.substr(st.rfind("|") + 1, st.length());
-				int playerid = stoi(player);
-				Player* p = GetSessionHandler()->GetPlayer(playerid);
-				if(p) p->UpdateLastSeen();
 				response = GetSessionHandler()->GetGameList();
 			}
 
