@@ -190,7 +190,7 @@ void SessionHandler::KickAFKs() {
 		if (s.count() - vPlayers[i]->GetLastSeen() > 30) {
 			if (IsPlayerInGame(vPlayers[i])) {
 				KickPlayer(vPlayers[i]->GetId());
-				Msg("[S] Player #" << vPlayers[i]->GetId() << "kicked. Reason: connection lost");
+				Msg("[S] Player #" << vPlayers[i]->GetId() << " kicked. Reason: connection lost");
 			}
 		}
 	}
