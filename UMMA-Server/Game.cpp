@@ -10,6 +10,7 @@ Game::Game(int id) {
 	iTurn = 1;
 	iPlayerTurnId = -1;
 	iTurnEndTime = -1;
+	iPlayerWonId = -1;
 }
 
 int Game::GetId() {
@@ -135,6 +136,36 @@ int Game::GetAmountOfPlayers() {
 	return vPlayers.size();
 }
 
+void Game::CheckWinConditions() {
+	if (iType == GAME_OVER || iType == GAME_LOBBY) return;
+	if (vPlayers.size() < 1) return; //how?
+	if (vPlayers.size() == 1) Win(vPlayers[0]);
+	for (int i = 0; i < vPlayers.size(); i++) {
+		if (vPlayers[i]->GetCardAmount() < 1) Win(vPlayers[i]);
+	}
+}
+
+void Game::Win(Player* player) {
+	if (!player) return;
+	Success("[G#" << GetId() << "] Game finished. Player #" << player->GetId() << " has won the game!");
+	iType = GAME_OVER;
+	iPlayerWonId = player->GetId();
+}
+
+bool Game::IsGameOver() {
+	CheckWinConditions();
+	if (iType == GAME_OVER) return true;
+	else return false;
+}
+
+std::string Game::SendGameOverMessage() {
+	if (!IsGameOver()) return std::string(" ");
+	std::string out = "endgame|";
+	out.append(std::to_string(iPlayerWonId));
+	out.append("-");
+	return out;
+}
+
 Card* Game::GetCardOnTop() {
 	return pCardOnTop;
 }
@@ -143,6 +174,7 @@ Card* Game::GetCardOnTop() {
 
 // executes the move (or doesn't, if not needed)
 std::string Game::ExecuteMove(std::string datain) {
+	if (IsGameOver()) return SendGameOverMessage();
 	Msg("[G#" << GetId() << "] Executing move...");
 	if (datain.rfind("first", 0) == 0) { //first round
 		Msg("[G#" << GetId() << "] This is a first move!");
@@ -300,6 +332,7 @@ void Game::PassTurn() {
 // which means: players with ID 4, 7, 12; in lobby ID 4
 //
 std::string Game::MsgGetLobbyStatus() {
+	if (IsGameOver()) return SendGameOverMessage();
 	std::string r = "lobbystatus|";
 	for (size_t i = 0; i < vPlayers.size(); i++) {
 		r.append(std::to_string(vPlayers[i]->GetId()));
@@ -315,6 +348,7 @@ std::string Game::MsgGetLobbyStatus() {
 }
 
 std::string Game::MsgGetGameStatus(int playerid) {
+	if (IsGameOver()) return SendGameOverMessage();
 	std::string out = "gamestatus|";
 	Player* p = GetSessionHandler()->GetPlayer(playerid);
 	Card* cot = GetCardOnTop();
@@ -335,6 +369,7 @@ std::string Game::MsgGetGameStatus(int playerid) {
 		out.append(std::to_string(vPlayers[i]->GetId()));
 		if (vPlayers[i]->GetId() == iGameHostId) out.append("H");
 		if (vPlayers[i]->GetId() == iPlayerTurnId) out.append("T");
+		if (vPlayers[i]->GetCardAmount() == 1) out.append("M");
 		out.append("|");
 	}
 	out.append("*");

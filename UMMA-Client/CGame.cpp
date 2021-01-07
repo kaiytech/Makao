@@ -10,6 +10,7 @@ Game::Game() {
 	bInLobby = false;
 	bInGame = false;
 	bInLobbyList = false;
+	bInGameOver = false;
 	iId = -1;
 }
 
@@ -25,6 +26,10 @@ bool Game::IsInLobbyList() {
 	return bInLobbyList;
 }
 
+bool Game::IsInGameOver() {
+	return bInGameOver;
+}
+
 void Game::SetInLobby(bool state) {
 	bInLobby = state;
 }
@@ -35,6 +40,10 @@ void Game::SetInGame(bool state) {
 
 void Game::SetInLobbyList(bool state) {
 	bInLobbyList = state;
+}
+
+void Game::SetInGameOver(bool state) {
+	bInGameOver = state;
 }
 
 // Once the ID is set, it can't be changed.

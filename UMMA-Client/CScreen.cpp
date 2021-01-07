@@ -171,6 +171,23 @@ void Screen::DisplayWaitScreen() {
 	FINISHPRINT;
 }
 
+//endgame|winid-
+void Screen::DisplayGameOverScreen(std::string datain) {
+	std::string out = datain;
+	int sap = out.rfind("|");
+	int end = out.rfind("-");
+	out = out.substr(sap + 1, end);
+
+	int playerid = stoi(out);
+	if (playerid == game->GetId()) {
+		PRINT("You won!");
+	} else {
+		PRINT("You lost!");
+	}
+	PRINT("Player #" << playerid << " wins the game!");
+	FINISHPRINT;
+}
+
 // don't use frequently as it causes blinking!!!
 void Screen::ClearScreen() {
 	for (size_t y = 0; y < GetWindowSize().y; y++){

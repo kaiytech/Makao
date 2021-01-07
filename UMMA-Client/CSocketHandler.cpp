@@ -222,7 +222,14 @@ void Handle() {
 			game->SetInGame(true);
 			game->SetInLobby(false);
 			game->SetInLobbyList(false);
+		}
 
+		else if (st.rfind("endgame|", 0) == 0) {
+			game->SetInGame(false);
+			game->SetInLobby(false);
+			game->SetInLobbyList(false);
+			game->SetInGameOver(true);
+			screen->DisplayGameOverScreen(st);
 		}
 
 		

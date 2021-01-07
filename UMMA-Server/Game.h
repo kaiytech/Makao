@@ -13,7 +13,8 @@
 enum GAME_TYPE {
 	GAME_NONE,
 	GAME_LOBBY,
-	GAME_GAME
+	GAME_GAME,
+	GAME_OVER
 };
 
 class Game {
@@ -38,6 +39,11 @@ public:
 	bool RemovePlayer(Player* player);
 	bool RemovePlayer(int playerid);
 	int GetAmountOfPlayers();
+
+	void CheckWinConditions();
+	void Win(Player* player);
+	bool IsGameOver();
+	std::string SendGameOverMessage();
 
 	Card* GetCardOnTop();
 
@@ -69,9 +75,10 @@ private:
 	std::vector<Card*> vDeck;
 	Card* pCardOnTop;
 
-	//Game
 	int iTurn;
 	int iPlayerTurnId;
+
+	int iPlayerWonId;
 };
 
 

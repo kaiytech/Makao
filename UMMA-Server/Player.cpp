@@ -59,11 +59,7 @@ Card* Player::GetCard(int index) {
 }
 
 int Player::GetCardAmount() {
-	int c = 0;
-	for (size_t i = 0; i < vCards.size(); i++) {
-		c++;
-	}
-	return c;
+	return vCards.size();
 }
 
 std::string Player::GetCards() {

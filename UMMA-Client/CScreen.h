@@ -47,6 +47,7 @@ public:
 	void DisplayLobby(std::string datain);
 	lobbylist DisplayLobbyList(std::string datain);
 	void DisplayWaitScreen();
+	void DisplayGameOverScreen(std::string datain);
 	void ClearScreen();
 
 	void DisplayGameScreen(std::string datain);
