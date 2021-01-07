@@ -98,10 +98,15 @@ bool Game::AddPlayer(Player *player) {
 		return false;
 	}
 
+	if (iType == GAME_GAME || iType == GAME_OVER) {
+		Warn("[G#" << GetId() << "] Can't join the game, because it's currently in progress.");
+		return false;
+	}
+
 	int pid = player->GetId();
 
 	if (GetAmountOfPlayers() > 5) {
-		Msg("[G#" << GetId() << "] Player limit in one game reached.");
+		Warn("[G#" << GetId() << "] Player limit in one game reached.");
 		return false;
 	}
 
