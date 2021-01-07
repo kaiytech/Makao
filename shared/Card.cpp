@@ -195,4 +195,43 @@ void Card::PrintSuit() {
 	}
 }
 
+Card* Card::GetCardFromString(std::string datain) {
+	char csuit = datain[0];
+	char ctype = datain[1];
+
+	CARD_SUIT s;
+	CARD_TYPE t;
+	bool fail = false;
+
+	switch (csuit) {
+		case 67: s = SUIT_CLUB; break;
+		case 68: s = SUIT_DIAMOND; break;
+		case 72: s = SUIT_HEART; break;
+		case 83: s = SUIT_SPADE; break;
+		default: fail = true; break;
+	}
+
+	switch (ctype) {
+		case 65: t = TYPE_A; break;
+		case 50: t = TYPE_2; break;
+		case 51: t = TYPE_3; break;
+		case 52: t = TYPE_4; break;
+		case 53: t = TYPE_5; break;
+		case 54: t = TYPE_6; break;
+		case 55: t = TYPE_7; break;
+		case 56: t = TYPE_8; break;
+		case 57: t = TYPE_9; break;
+		case 48: t = TYPE_10; break;
+		case 74: t = TYPE_J; break;
+		case 81: t = TYPE_Q; break;
+		case 75: t = TYPE_K; break;
+		default: fail = true; break;
+	}
+	if (fail) return NULL;
+
+	Card* c = new Card(t, s);
+	if (c) return c;
+	else return NULL;
+}
+
 #endif // CLIENT

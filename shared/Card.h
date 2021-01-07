@@ -51,6 +51,8 @@ public:
 	void PrintSmall();
 	std::string GetTypeText();
 	void PrintSuit();
+
+	static Card* GetCardFromString(std::string datain);
 	#endif 
 
 
