@@ -2,6 +2,7 @@
 #include "Game.h"
 #include <string>
 #include <stdexcept>
+#include <chrono>
 
 static SessionHandler* __g_sh = 0;
 
@@ -37,6 +38,7 @@ int SessionHandler::CreatePlayer() {
 	Msg("[S] Creating a new player with an ID" << iNumOfPlayers);
 	Player* p = new Player(iNumOfPlayers);
 	vPlayers.push_back(p);
+	p->UpdateLastSeen();
 	Success("[S] New player #" << iNumOfPlayers << " created!");
 
 	return iNumOfPlayers;
@@ -114,6 +116,7 @@ bool SessionHandler::JoinLoby(int playerid, int lobbyid) {
 		Error("[S] Invalid player!");
 		return false;
 	}
+	player->UpdateLastSeen();
 	if (IsPlayerInGame(player)) {
 		Warn("[S] Player already in other game! Kicking.");
 		KickPlayer(playerid);
@@ -141,6 +144,8 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 		Error("[S] Invalid player!");
 		return false;
 	}
+
+	p->UpdateLastSeen();
 
 	Game* game = NULL;
 
@@ -172,10 +177,23 @@ std::string SessionHandler::ParseAndExecuteMove(std::string datain) {
 
 	Player* pPlayer = GetPlayer(playerid);
 	if (!pPlayer) return "AFS";
+	pPlayer->UpdateLastSeen();
 	Game * pGame = IsPlayerInGame(pPlayer);
 	if (!pGame) return "AFS";
 
 	return pGame->ExecuteMove(datain);
+}
+
+void SessionHandler::KickAFKs() {
+	for (int i = 0; i < vPlayers.size(); i++) {
+		std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> (std::chrono::system_clock::now().time_since_epoch());
+		if (s.count() - vPlayers[i]->GetLastSeen() > 30) {
+			if (IsPlayerInGame(vPlayers[i])) {
+				KickPlayer(vPlayers[i]->GetId());
+				Msg("[S] Player #" << vPlayers[i]->GetId() << "kicked. Reason: connection lost");
+			}
+		}
+	}
 }
 
 // Destructor

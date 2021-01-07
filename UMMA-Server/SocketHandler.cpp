@@ -53,6 +53,8 @@ void Handle() {
 			bool sendStatus = false;
 			bool lobbyPlayer = false;
 
+			GetSessionHandler()->KickAFKs();
+
 			std::string response = "Hi";
 			//assign new ID
 			if (st == "status") {
@@ -67,6 +69,7 @@ void Handle() {
 				int playerid = stoi(tocut);
 
 				Player* player = GetSessionHandler()->GetPlayer(playerid);
+				if(player) player->UpdateLastSeen();
 
 				// if in game...
 				Game* g = GetSessionHandler()->IsPlayerInGame(player);
@@ -98,6 +101,7 @@ void Handle() {
 
 				// try to add the player to the room
 				if (player) {
+					player->UpdateLastSeen();
 					gameid = GetSessionHandler()->CreateGame();
 					game = GetSessionHandler()->GetGame(gameid);
 					if (game) {
@@ -119,6 +123,10 @@ void Handle() {
 			}
 
 			if (st.rfind("lobbylist|", 0) == 0) {
+				std::string player = st.substr(st.rfind("|") + 1, st.length());
+				int playerid = stoi(player);
+				Player* p = GetSessionHandler()->GetPlayer(playerid);
+				if(p) p->UpdateLastSeen();
 				response = GetSessionHandler()->GetGameList();
 			}
 
@@ -127,6 +135,7 @@ void Handle() {
 				tocut = st.substr(11, st.length());
 				int playerid = stoi(tocut);
 				GetSessionHandler()->KickPlayer(playerid);
+				GetSessionHandler()->GetPlayer(playerid)->UpdateLastSeen();
 				response = "Hi"; //defaulting the response
 			}
 

@@ -18,8 +18,12 @@ public:
 	int GetCardAmount();
 	std::string GetCards();
 
+	void UpdateLastSeen();
+	long long int GetLastSeen();
+
 private:
 	int iId;
+	long long int ilastSeen;
 	std::vector<Card*> vCards;
 };
 #endif // ! PLAYER

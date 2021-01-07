@@ -1,8 +1,10 @@
 #include "Player.h"
 #include <algorithm>
+#include <chrono>
 
 Player::Player(int id) {
 	iId = id;
+	UpdateLastSeen();
 }
 
 int Player::GetId() {
@@ -72,4 +74,13 @@ std::string Player::GetCards() {
 	}
 	out.append("*");
 	return out;
+}
+
+void Player::UpdateLastSeen() {
+	std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds> ( std::chrono::system_clock::now().time_since_epoch());
+	ilastSeen = s.count();
+}
+
+long long int Player::GetLastSeen() {
+	return ilastSeen;
 }

@@ -28,6 +28,8 @@ public:
 
 	std::string GetGameList();
 
+	void KickAFKs();
+
 private:
 	std::vector<Game*> vGames;
 	int iNumOfGames;
