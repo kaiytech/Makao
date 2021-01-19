@@ -158,6 +158,11 @@ bool SessionHandler::ParseAndExecuteBeginGame(std::string datain) {
 		return false;
 	}
 
+	if (game->GetNumberOfPlayers() <= 1) {
+		Warn("[S] Player " << playerid << " can't begin the game because there is too few players.");
+		return false;
+	}
+
 	return game->MakeGame();
 
 }
