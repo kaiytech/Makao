@@ -66,21 +66,21 @@ void Console_Message(std::string s) {
 void Console_Warning(std::string s) {
 	timestamp();
 	setcolor(14);
-	printf("[WARN]  %s\n", s.c_str());
+	printf("[WARN] %s\n", s.c_str());
 	setcolor(7);
 }
 
 void Console_Error(std::string s) {
 	timestamp();
 	setcolor(4);
-	printf("[ERR]   %s\n", s.c_str());
+	printf("[ERROR] %s\n", s.c_str());
 	setcolor(7);
 }
 
 void Console_Success(std::string s) {
 	timestamp();
 	setcolor(2);
-	printf("[SUCC]  %s\n", s.c_str());
+	printf("[ OK ] %s\n", s.c_str());
 	setcolor(7);
 }
 

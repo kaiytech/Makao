@@ -129,6 +129,7 @@ void Handle() {
 					}
 				}
 
+				//game
 				if (game->HasId() && game->IsInGame()) {
 					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "1"); break; } // play card 1
 					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "2"); break; } // play card 2

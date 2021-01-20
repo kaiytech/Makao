@@ -144,7 +144,7 @@ int Game::GetAmountOfPlayers() {
 void Game::CheckWinConditions() {
 	if (iType == GAME_OVER || iType == GAME_LOBBY) return;
 	if (vPlayers.size() < 1) return; //how?
-	if (vPlayers.size() == 1) Win(vPlayers[0]);
+	if (vPlayers.size() == 1) Win(vPlayers[0]); //shouldn't hit.
 	for (int i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetCardAmount() < 1) Win(vPlayers[i]);
 	}

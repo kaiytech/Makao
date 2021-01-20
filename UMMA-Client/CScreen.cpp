@@ -167,8 +167,8 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 }
 
 void Screen::DisplayWaitScreen() {
-	PRINT("Laczenie z serwerem. Prosze czekac.");
-	FINISHPRINT;
+	//PRINT("Laczenie z serwerem. Prosze czekac.");
+	//FINISHPRINT;
 }
 
 //endgame|winid-
@@ -223,17 +223,28 @@ void Screen::DisplayGameScreen(std::string datain) {
 			std::string host = "H"; bool bhost = false;
 			std::string turn = "T"; bool bturn = false;
 			if (tempstring.find(turn) != std::string::npos) {
-				host = true;
-				tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'T'), tempstring.end());
+				bturn = true;
+				std::string totest = tempstring.substr(0, tempstring.find(turn));
+				int id = game->GetId();
+				if (stoi(totest) == game->GetId()) {
+					game->SetMyTurn(true);
+				}
+				else {
+					game->SetMyTurn(false);
+				}
 			}
 			if (tempstring.find(host) != std::string::npos) { 
-				turn = true; 
-				tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'H'), tempstring.end());
+				bhost = true; 
 			}
+			if(bturn) tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'T'), tempstring.end());
+			if(bhost) tempstring.erase(std::remove(tempstring.begin(), tempstring.end(), 'H'), tempstring.end());
 
-			if (bturn) cout << ">";
-			cout << playerindicator << ". P#" + tempstring;
-			if (bhost) cout << " (Host)";
+			tempstring = std::string("#").append(tempstring);
+
+			if (bturn) tempstring = std::string(">> ").append(tempstring);
+			if (bhost) tempstring.append(" (Host)");
+			//cout << tempstring;
+			PRINT(tempstring);
 
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
@@ -247,9 +258,8 @@ void Screen::DisplayGameScreen(std::string datain) {
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
 		setCursorPosition(0, 0);
-		setcolor(32);
+		game->IsMyTurn() ? setcolor(32) : setcolor(128);
 		cout << char(254);
-		setcolor(32);
 		PRINT(" |MAKAO|    Game #" << tempstring);
 		setcolor(8);
 
@@ -290,11 +300,15 @@ void Screen::DisplayGameScreen(std::string datain) {
 		std::string playerlist = workingdata.substr(0, endOfCardList);
 		int playerindicator = 1;
 		cout << " ";
+
+		game->ClearCards(); // remember to clear the cached card list first.
+
 		while (true) {
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
 			Card* c = Card::GetCardFromString(tempstring);
+			game->AddCard(c); // add to card list
 			if (c) c->PrintSmall(playerindicator);
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;

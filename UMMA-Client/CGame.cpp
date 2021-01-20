@@ -11,6 +11,8 @@ Game::Game() {
 	bInGame = false;
 	bInLobbyList = false;
 	bInGameOver = false;
+	bInCardPlanning = false;
+	bMyTurn = false;
 	iId = -1;
 }
 
@@ -30,6 +32,14 @@ bool Game::IsInGameOver() {
 	return bInGameOver;
 }
 
+bool Game::IsInCardPlanning() {
+	return bInCardPlanning;
+}
+
+bool Game::IsMyTurn() {
+	return bMyTurn;
+}
+
 void Game::SetInLobby(bool state) {
 	bInLobby = state;
 }
@@ -46,6 +56,14 @@ void Game::SetInGameOver(bool state) {
 	bInGameOver = state;
 }
 
+void Game::SetInCardPlanning(bool state) {
+	bInCardPlanning = state;
+}
+
+void Game::SetMyTurn(bool state) {
+	bMyTurn = state;
+}
+
 // Once the ID is set, it can't be changed.
 void Game::AssignId(int id) {
 	if (iId == -1) iId = id;
@@ -58,4 +76,29 @@ bool Game::HasId() {
 
 int Game::GetId() {
 	return iId;
+}
+
+void Game::ClearCards() {
+	vCards.clear();
+}
+
+void Game::AddCard(Card* card) {
+	vCards.push_back(card);
+}
+
+Card* Game::GetCard(int id) {
+	return vCards[id];
+}
+
+void Game::SetPlannedCard(Card* card) {
+	if(card) pCardPlanned = card;
+}
+
+Card* Game::GetPlannedCard() {
+	if (pCardPlanned) return pCardPlanned;
+	return nullptr;
+}
+
+void Game::UnsetPlannedCard() {
+	pCardPlanned = nullptr;
 }
