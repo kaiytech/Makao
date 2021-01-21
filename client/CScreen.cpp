@@ -89,10 +89,11 @@ void Screen::DisplaySplashScreen() {
 void Screen::DisplayMainMenu() {
 	if (game->IsInGame()) return;
 	PRINT("Makao");
-	PRINT("Kliknij cyfre odpowiadajaca Twojemu wyborowi:");
-	PRINT("1. Utworz pokoj:");
-	PRINT("2. Dolacz do pokoju");
-	PRINT("3. Wyjdz");
+	PRINT("Press 1-4 to interact with menu:");
+	PRINT("1. New lobby");
+	PRINT("2. Lobby list");
+	PRINT("3. How to play?");
+	PRINT("4. Exit");
 	FINISHPRINT;
 }
 
@@ -121,8 +122,8 @@ void Screen::DisplayLobby(std::string datain) {
 		players = players.substr(sap + 1, players.length());
 	}
 	PRINT("");
-	if (isHost) PRINT("1. Rozpocznij gre");
-	PRINT("0. Wyjdz z pokoju");
+	if (isHost) PRINT("1. Start game");
+	PRINT("0. Leave lobby");
 	FINISHPRINT;
 }
 
@@ -143,7 +144,7 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 		std::string rid = r.substr(0, r.find("+"));
 		std::string rpn = r.substr(r.find("+") + 1, r.length());
 
-		PRINT(num << " Pokoj #" << rid << " (" << rpn << "/6 graczy)");
+		PRINT(num << " Lobby #" << rid << " (" << rpn << "/6 players)");
 		rooms = rooms.substr(sap + 1, rooms.length());
 
 		// this is embarassing
@@ -162,7 +163,7 @@ lobbylist Screen::DisplayLobbyList(std::string datain) {
 		}
 		num++;
 	}
-	PRINT("0. Wroc do ekranu glownego");
+	PRINT("0. Back to main menu");
 	FINISHPRINT;
 	return l;
 }
@@ -426,6 +427,8 @@ void Screen::DisplayGameScreen(std::string datain) {
 		//cout << "\n";
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
+
+	screen->setCursorPosition(0, 0);
 
 	//FINISHPRINT;
 }

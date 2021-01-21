@@ -1,5 +1,6 @@
 ﻿#include "CSocketHandler.h"
 #include <windows.h>
+#include <shellapi.h>
 #include <WinUser.h>
 #include <tchar.h>
 #include <chrono>
@@ -89,21 +90,10 @@ void Handle() {
 
 				// Main menu:
 				if (game->HasId() && !game->IsInGame() && !game->IsInLobby() && !game->IsInLobbyList()) {
-					if (KEYPRESSED(0x31)) { // 1
-						sprintf_s(msgtosend, "createlobby|%i", game->GetId());
-						game->SetInLobby(true);
-						break;
-					}
-					if (KEYPRESSED(0x32)) { // 2
-						//cout << "ID pokoju: ";
-						//cin >> roomid;
-						sprintf_s(msgtosend, "lobbylist|");
-						game->SetInLobbyList(true);
-						break;
-					}
-					if (KEYPRESSED(0x33)) { // 3
-						return; // end
-					}
+					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "createlobby|%i", game->GetId());game->SetInLobby(true);break; }
+					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "lobbylist|"); game->SetInLobbyList(true); break; }
+					if (KEYPRESSED(0x33)) { ShellExecute(0, 0, L"http://www.google.com", 0, 0, SW_SHOW); break; }
+					if (KEYPRESSED(0x34)) { return; }
 				}
 
 				// Lobby:
@@ -167,15 +157,15 @@ void Handle() {
 							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); break; }
 					}
 					else if (game->GetPlannedCard()->GetType() == TYPE_J) {
-						if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "10"); break; }
-						if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); break; }
-						if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); break; }
-						if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); break; }
-						if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "5"); break; }
-						if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "6"); break; }
-						if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "7"); break; }
-						if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "8"); break; }
-						if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "9"); break; }
+						if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "10"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "5"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "6"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "7"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "8"); game->SetInCardPlanning(false); break; }
+						if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "9"); game->SetInCardPlanning(false); break; }
 					}
 					if (KEYPRESSED(0x30)) { game->SetInCardPlanning(false); break; }
 				}
