@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b6b159ee-da59-489d-802f-c5de0a2c6221}</ProjectGuid>
+    <ProjectGuid>{B780C860-E885-4791-A0F6-862FFF58C2F7}</ProjectGuid>
     <RootNamespace>UMMAServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Makao-Server</ProjectName>
