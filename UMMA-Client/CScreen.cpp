@@ -344,8 +344,8 @@ void Screen::DisplayGameScreen(std::string datain) {
 					cout << " 2:"; c2->PrintSuit();
 					cout << " 3:"; c3->PrintSuit();
 					cout << " 4:"; c4->PrintSuit();
-					cout << "                   ";
-					setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
+					PRINT(" ");
+					//setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
 				}
 				default:
 					setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 2);
@@ -365,13 +365,12 @@ void Screen::DisplayGameScreen(std::string datain) {
 		cout << "\n";
 
 		if (game->IsInCardPlanning()) {
-			cout << " (1-9) - demand       (0) - cancel              ";
-			setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
-			cout << "                                                 ";
+			//setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + -1);
+			PRINT(" (1-9) - demand       (0) - cancel              ");
+			FINISHPRINT;
 		}
 		else {
-			cout << " (1-9) - play card    (0) - next page           ";
-			setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
+			PRINT(" (1-9) - play card    (0) - next page           ");
 			cout << " (z)   - draw card    (x) - forfeit             ";
 		}
 		setcolor(7);

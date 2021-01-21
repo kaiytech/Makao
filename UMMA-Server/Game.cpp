@@ -333,7 +333,7 @@ bool Game::Validate(Card* card) {
 	}
 	// J demands:
 	else if (iJNum > 0) {
-		if (iJNum == 1) { if (card->GetType() == TYPE_10 || card->GetType() == TYPE_J) return true; }
+		if (iJNum == 10) { if (card->GetType() == TYPE_10 || card->GetType() == TYPE_J) return true; }
 		else if (iJNum == 2) { if (card->GetType() == TYPE_2 || card->GetType() == TYPE_J) return true; }
 		else if (iJNum == 3) { if (card->GetType() == TYPE_3 || card->GetType() == TYPE_J) return true; }
 		else if (iJNum == 4) { if (card->GetType() == TYPE_4 || card->GetType() == TYPE_J) return true; }
