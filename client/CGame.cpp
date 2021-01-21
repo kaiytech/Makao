@@ -69,7 +69,7 @@ void Game::SetMyTurn(bool state) {
 	bMyTurn = state;
 }
 
-// Once the ID is set, it can't be changed.
+// Once the ID is set, it shouldn't be changed.
 void Game::AssignId(int id) {
 	if (iId == -1) iId = id;
 }
