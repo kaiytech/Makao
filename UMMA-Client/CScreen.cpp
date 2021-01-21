@@ -87,6 +87,7 @@ void Screen::DisplaySplashScreen() {
 }
 
 void Screen::DisplayMainMenu() {
+	if (game->IsInGame()) return;
 	PRINT("Makao");
 	PRINT("Kliknij cyfre odpowiadajaca Twojemu wyborowi:");
 	PRINT("1. Utworz pokoj:");
@@ -309,11 +310,53 @@ void Screen::DisplayGameScreen(std::string datain) {
 			std::string tempstring = playerlist.substr(0, sap);
 			Card* c = Card::GetCardFromString(tempstring);
 			game->AddCard(c); // add to card list
-			if (c) c->PrintSmall(playerindicator);
+			if (c && !game->IsInCardPlanning()) c->PrintSmall(playerindicator);
+			//delete c;
+			// ^THAT LINE UNCOMMENTED WASTED ME AN HOUR OF MY PRECIOUS LIFE
+			// IM SERIOUS
+			// KAWEFJIWEJFGJ2q34e23r34rEWsaJdOGVJHREJsdsaGIOPE
+
 			playerlist = playerlist.substr(sap + 1, playerlist.length());
 			playerindicator++;
 		}
-		cout << "\n\n";
+
+		static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		setCursorPosition(0, GetConsoleCursorPosition(hOut).Y);
+		if (game->IsInCardPlanning()) {
+			Card* c = game->GetPlannedCard();
+			if (c) {
+				cout << "Attempting to play ";
+				c->PrintMinimal();
+				switch (game->GetPlannedCard()->GetType())
+				{
+				case TYPE_J:
+					PRINT(". What card do you demand?");
+					PRINT("1:10  2:2  3:3  4:4  5:5  6:6  7:7  8:8  9:9");
+					break;
+				case TYPE_A:
+				{
+					PRINT(". What suit do you demand?");
+					Card* c1 = new Card(TYPE_A, SUIT_CLUB);
+					Card* c2 = new Card(TYPE_A, SUIT_SPADE);
+					Card* c3 = new Card(TYPE_A, SUIT_DIAMOND);
+					Card* c4 = new Card(TYPE_A, SUIT_HEART);
+					cout << "1:"; c1->PrintSuit();
+					cout << " 2:"; c2->PrintSuit();
+					cout << " 3:"; c3->PrintSuit();
+					cout << " 4:"; c4->PrintSuit();
+					cout << "                   ";
+					setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
+				}
+				default:
+					setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 2);
+					break;
+				}
+
+			}
+		}
+		else {
+			setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 2);
+		}
 		setcolor(6);
 		windowsize w = GetWindowSize();
 		for (size_t i = 0; i < w.x; i++){
@@ -321,12 +364,22 @@ void Screen::DisplayGameScreen(std::string datain) {
 		}
 		cout << "\n";
 
-		cout << " (1-9) - play card    (0) - next page\n (z)   - draw card    (x) - forfeit";
+		if (game->IsInCardPlanning()) {
+			cout << " (1-9) - demand       (0) - cancel              ";
+			setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
+			cout << "                                                 ";
+		}
+		else {
+			cout << " (1-9) - play card    (0) - next page           ";
+			setCursorPosition(0, GetConsoleCursorPosition(hOut).Y + 1);
+			cout << " (z)   - draw card    (x) - forfeit             ";
+		}
 		setcolor(7);
 
 		workingdata = workingdata.substr(endOfCardList + 1, workingdata.length());
 	}
 
+	Card* currentCard;
 	//print current card
 	{
 		int sap = workingdata.find("|");
@@ -336,6 +389,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 		setcolor(7);
 		setCursorPosition(4, 4);
 		Card* c = Card::GetCardFromString(tempstring);
+		currentCard = c;
 		if(c) c->PrintBig();
 
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
@@ -345,7 +399,22 @@ void Screen::DisplayGameScreen(std::string datain) {
 	{
 		int sap = workingdata.find("|");
 		std::string tempstring = workingdata.substr(0, sap);
-		//PRINT("Card function: " << tempstring);
+		if (tempstring.find("X") != std::string::npos) {
+			cout << "               ";
+		}
+		else {
+			cout << "  Demand: ";
+			int si = stoi(tempstring);
+			if (currentCard->GetType() == TYPE_A) {
+				if (si == 1) { Card* c = new Card(TYPE_J, SUIT_CLUB); c->PrintSuit(); }
+				else if (si == 2) { Card* c = new Card(TYPE_J, SUIT_SPADE); c->PrintSuit(); }
+				else if (si == 3) { Card* c = new Card(TYPE_J, SUIT_DIAMOND); c->PrintSuit(); }
+				else if (si == 4) { Card* c = new Card(TYPE_J, SUIT_HEART); c->PrintSuit(); }
+			}
+			else if (currentCard->GetType() == TYPE_J) {
+				cout << si;
+			}
+		}
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
@@ -361,6 +430,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 
 	//FINISHPRINT;
 }
+
 
 COORD Screen::GetConsoleCursorPosition(HANDLE hConsoleOutput)
 {

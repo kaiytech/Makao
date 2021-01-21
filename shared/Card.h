@@ -5,6 +5,7 @@
 // if CScreen.h can't be found, make sure the client has $(ProjectDir)
 // added in include paths
 #include "CScreen.h"
+
 #endif
 
 #include <string>
@@ -51,6 +52,7 @@ public:
 	void PrintSmall(int i);
 	std::string GetTypeText();
 	void PrintSuit();
+	void PrintMinimal();
 
 	static Card* GetCardFromString(std::string datain);
 	#endif 

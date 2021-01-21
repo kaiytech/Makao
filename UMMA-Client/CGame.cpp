@@ -14,6 +14,7 @@ Game::Game() {
 	bInCardPlanning = false;
 	bMyTurn = false;
 	iId = -1;
+	iCachedNumber = -1;
 }
 
 bool Game::IsInLobby() {
@@ -38,6 +39,10 @@ bool Game::IsInCardPlanning() {
 
 bool Game::IsMyTurn() {
 	return bMyTurn;
+}
+
+int Game::GetCachedNumber() {
+	return iCachedNumber;
 }
 
 void Game::SetInLobby(bool state) {
@@ -90,8 +95,9 @@ Card* Game::GetCard(int id) {
 	return vCards[id];
 }
 
-void Game::SetPlannedCard(Card* card) {
+void Game::SetPlannedCard(Card* card, int num) {
 	if(card) pCardPlanned = card;
+	iCachedNumber = num;
 }
 
 Card* Game::GetPlannedCard() {

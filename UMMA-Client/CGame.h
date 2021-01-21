@@ -15,6 +15,7 @@ public:
 	bool IsInGameOver();
 	bool IsInCardPlanning();
 	bool IsMyTurn();
+	int GetCachedNumber();
 
 	void SetInLobby(bool state);
 	void SetInGame(bool state);
@@ -22,6 +23,7 @@ public:
 	void SetInGameOver(bool state);
 	void SetInCardPlanning(bool state);
 	void SetMyTurn(bool state);
+	void SetCachedNumber(int num);
 
 	void AssignId(int id);
 	bool HasId();
@@ -31,7 +33,7 @@ public:
 	void AddCard(Card* card);
 	Card* GetCard(int id);
 
-	void SetPlannedCard(Card* card);
+	void SetPlannedCard(Card* card, int num);
 	Card* GetPlannedCard();
 	void UnsetPlannedCard();
 
@@ -43,6 +45,8 @@ private:
 	bool bInCardPlanning;
 	bool bMyTurn;
 	int iId;
+
+	int iCachedNumber;
 
 	bool bTurn;
 

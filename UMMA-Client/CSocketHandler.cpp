@@ -11,6 +11,11 @@
 #define DEBUG_LOG false
 #define KEYPRESSED(x) (GetConsoleWindow() == GetForegroundWindow()) && GetKeyState(x) && GetAsyncKeyState(x)
 
+#define PARSECARD(x, x2, y)	if (game->GetCard(x)->GetType() == TYPE_J || game->GetCard(x)->GetType() == TYPE_A) { \
+						game->SetInCardPlanning(true); \
+						game->SetPlannedCard(game->GetCard(x), x2); \
+						break; } else { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), y); break; } 
+
 #define WAIT_TIME 500
 
 using namespace std;
@@ -78,6 +83,10 @@ void Handle() {
 
 					break;
 				}
+
+				//quickfix to prevent card planning appearing when not wanted.
+				if (!game->IsMyTurn()) game->SetInCardPlanning(false);
+
 				// Main menu:
 				if (game->HasId() && !game->IsInGame() && !game->IsInLobby() && !game->IsInLobbyList()) {
 					if (KEYPRESSED(0x31)) { // 1
@@ -130,21 +139,48 @@ void Handle() {
 				}
 
 				//game
-				if (game->HasId() && game->IsInGame()) {
-					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "1"); break; } // play card 1
-					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "2"); break; } // play card 2
-					if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "3"); break; } // play card 3
-					if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "4"); break; } // play card 4
-					if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "5"); break; } // play card 5
-					if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "6"); break; } // play card 6
-					if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "7"); break; } // play card 7
-					if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "8"); break; } // play card 8
-					if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "playcard|%i|%s|", game->GetId(), "9"); break; } // play card 9
-					if (KEYPRESSED(0x5A)) { sprintf_s(msgtosend, "drawcard|%i", game->GetId()); break; } // draw card (Z)
+				if (game->HasId() && game->IsInGame() && !game->IsInCardPlanning()) {
+					if (game->IsMyTurn()) {
+						if (KEYPRESSED(0x31)) { PARSECARD(0, 1, "1"); }
+						if (KEYPRESSED(0x32)) { PARSECARD(1, 2, "2"); }
+						if (KEYPRESSED(0x33)) { PARSECARD(2, 3, "3"); }
+						if (KEYPRESSED(0x34)) { PARSECARD(3, 4, "4"); }
+						if (KEYPRESSED(0x35)) { PARSECARD(4, 5, "5"); }
+						if (KEYPRESSED(0x36)) { PARSECARD(5, 6, "6"); }
+						if (KEYPRESSED(0x37)) { PARSECARD(6, 7, "7"); }
+						if (KEYPRESSED(0x38)) { PARSECARD(7, 8, "8"); }
+						if (KEYPRESSED(0x39)) { PARSECARD(8, 9, "9"); }
+						if (KEYPRESSED(0x5A)) { sprintf_s(msgtosend, "drawcard|%i", game->GetId()); break; } // draw card (Z)
+					}
 					if (KEYPRESSED(0x58)) { sprintf_s(msgtosend, "leavegame|%i", game->GetId()); break; } // leave game (X)
+				}
 
+				if (game->HasId() && game->IsInGame() && game->IsInCardPlanning()) {
+					if (game->GetPlannedCard()->GetType() == TYPE_A) {
+						if (KEYPRESSED(0x31)) { 
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "1"); break; }
+						if (KEYPRESSED(0x32)) {
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); break; }
+						if (KEYPRESSED(0x33)) {
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); break; }
+						if (KEYPRESSED(0x34)) {
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); break; }
+					}
+					else if (game->GetPlannedCard()->GetType() == TYPE_J) {
+						if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "10"); break; }
+						if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); break; }
+						if (KEYPRESSED(0x33)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); break; }
+						if (KEYPRESSED(0x34)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); break; }
+						if (KEYPRESSED(0x35)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "5"); break; }
+						if (KEYPRESSED(0x36)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "6"); break; }
+						if (KEYPRESSED(0x37)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "7"); break; }
+						if (KEYPRESSED(0x38)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "8"); break; }
+						if (KEYPRESSED(0x39)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "9"); break; }
+					}
+					if (KEYPRESSED(0x30)) { game->SetInCardPlanning(false); break; }
 				}
 			}
+
 			if(DEBUG_LOG) cout << "\nSending input: " << msgtosend << ".";
 
 

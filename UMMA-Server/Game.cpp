@@ -11,6 +11,8 @@ Game::Game(int id) {
 	iPlayerTurnId = -1;
 	iTurnEndTime = -1;
 	iPlayerWonId = -1;
+	iANum = -1;
+	iJNum = -1;
 }
 
 int Game::GetId() {
@@ -238,11 +240,29 @@ std::string Game::ExecuteMove(std::string datain) {
 			return "AFS";
 		}
 
+		//reset cards function
+		if (GetCardOnTop()->GetType() == TYPE_J || GetCardOnTop()->GetType() == TYPE_A) {
+			iJNum = -1; iANum = -1;
+		}
+
 		PutOnTop(c);
 		if (!pPlayer->RemoveCard(c)) {
 			Warn("[G#" << GetId() << "] Can't finish move: Player doesn't have the card");
 			return "AFS";
 		}
+
+		s = s.substr(sap + 1, s.length());
+		sap = s.find("|");
+		std::string func = s.substr(0, sap);
+
+		iJNum = -1; iANum = -1;
+		if (c->GetType() == TYPE_J) {
+			iJNum = stoi(func);
+		}
+		else if (c->GetType() == TYPE_A) {
+			iANum = stoi(func);
+		}
+
 
 		std::chrono::seconds s2 = std::chrono::duration_cast<std::chrono::seconds> (
 			std::chrono::system_clock::now().time_since_epoch()
@@ -304,13 +324,32 @@ std::string Game::ExecuteMove(std::string datain) {
 }
 
 bool Game::Validate(Card* card) {
-	if (
+	// A demands:
+	if (iANum > 0) {
+		if (iANum == 1) { if (card->GetSuit() == SUIT_CLUB) return true; }
+		else if (iANum == 2) { if (card->GetSuit() == SUIT_SPADE) return true; }
+		else if (iANum == 3) { if (card->GetSuit() == SUIT_DIAMOND) return true; }
+		else if (iANum == 4) { if (card->GetSuit() == SUIT_HEART) return true; }
+	}
+	// J demands:
+	else if (iJNum > 0) {
+		if (iJNum == 1) { if (card->GetType() == TYPE_10 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 2) { if (card->GetType() == TYPE_2 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 3) { if (card->GetType() == TYPE_3 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 4) { if (card->GetType() == TYPE_4 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 5) { if (card->GetType() == TYPE_5 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 6) { if (card->GetType() == TYPE_6 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 7) { if (card->GetType() == TYPE_7 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 8) { if (card->GetType() == TYPE_8 || card->GetType() == TYPE_J) return true; }
+		else if (iJNum == 9) { if (card->GetType() == TYPE_9 || card->GetType() == TYPE_J) return true; }
+	}
+	else if (
 		card->GetSuit() == pCardOnTop->GetSuit()
 		||
 		card->GetType() == pCardOnTop->GetType()
 		) return true;
 
-	else return false;
+	return false;
 }
 
 
@@ -401,7 +440,10 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	out.append("|");
 
 	//card function
-	out.append("X|"); //wip
+	if (iANum == -1 && iJNum == -1) out.append("X");
+	else if (iANum > 0) out.append(std::to_string(iANum));
+	else out.append(std::to_string(iJNum));
+	out.append("|");
 
 	//end?
 	out.append("0-"); //wip

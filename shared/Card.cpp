@@ -1,5 +1,9 @@
 #include "Card.h"
 
+#ifdef CLIENT
+#include "CGame.h"
+#endif
+
 using namespace std;
 
 Card::Card(CARD_TYPE type, CARD_SUIT suit) {
@@ -170,17 +174,20 @@ void Card::PrintSmall(int i) {
 	if (eSuit == SUIT_CLUB || eSuit == SUIT_SPADE) color = 112;
 	else color = 116;
 
-	// first (and the only) line of card
-	cout << i << ".";
+	if (!game->IsInCardPlanning()) {
+		game->IsMyTurn() ? cout << i << "." : cout << " ";
+	}
 	screen->setCursorPosition(c.X, c.Y + 1);
 	screen->setcolor(color);
-	PrintSuit();
-	cout << GetTypeText();
-	if (eType == TYPE_10) cout << " ";
-	else cout << "  ";
+	if (!game->IsInCardPlanning()) {
+		PrintSuit();
+		cout << GetTypeText();
+		if (eType == TYPE_10) cout << " ";
+		else cout << "  ";
 
-	screen->setcolor(8);
-	cout << char(220);
+		screen->setcolor(8);
+		cout << char(220);
+	}
 	screen->setcolor(7);
 
 	screen->setCursorPosition(startx + 5, starty);
@@ -256,6 +263,16 @@ Card* Card::GetCardFromString(std::string datain) {
 	Card* c = new Card(t, s);
 	if (c) return c;
 	else return NULL;
+}
+
+void Card::PrintMinimal() {
+	int color;
+	if (eSuit == SUIT_CLUB || eSuit == SUIT_SPADE) color = 112;
+	else color = 116;
+	screen->setcolor(color);
+	cout << GetTypeText();
+	PrintSuit();
+	screen->setcolor(7);
 }
 
 #endif // CLIENT

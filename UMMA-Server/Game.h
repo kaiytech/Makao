@@ -79,6 +79,9 @@ private:
 	int iPlayerTurnId;
 
 	int iPlayerWonId;
+
+	int iANum;
+	int iJNum;
 };
 
 

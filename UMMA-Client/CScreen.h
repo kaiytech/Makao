@@ -52,8 +52,6 @@ public:
 
 	void DisplayGameScreen(std::string datain);
 
-
-
 private:
 	static COORD GetConsoleCursorPosition(HANDLE hConsoleOutput);
 	static void setCursorPosition(int x, int y);
