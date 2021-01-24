@@ -13,6 +13,7 @@ Game::Game(int id) {
 	iPlayerWonId = -1;
 	iANum = -1;
 	iJNum = -1;
+	pCardOnTop = nullptr;
 }
 
 int Game::GetId() {
@@ -21,7 +22,7 @@ int Game::GetId() {
 
 int Game::GetNumberOfPlayers() {
 	int n = 0;
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		n++;
 	}
 	return n;
@@ -51,7 +52,7 @@ bool Game::SetGameHost(Player* player) {
 // returns Player* if game host is set
 // returns NULL otherwise
 Player* Game::GetGameHost() {
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == iGameHostId) return vPlayers[i];
 	}
 	return NULL;
@@ -86,7 +87,7 @@ bool Game::IsPlayerInGame(Player* player) {
 	int pid = player->GetId();
 
 	// check if the player is in the game
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == pid) return true; // return true if so
 	}
 	return false; // return false if not
@@ -113,7 +114,7 @@ bool Game::AddPlayer(Player *player) {
 	}
 
 	// check if the player isn't already in the game
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == pid) {
 			Msg("[G#" << GetId() << "] Player already in game.");
 			return false; // and return false if is
@@ -132,7 +133,7 @@ bool Game::RemovePlayer(Player *player) {
 
 bool Game::RemovePlayer(int playerid) {
 	Msg("[G#" << GetId() << "] Removing player from the game...");
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == playerid) vPlayers.erase(vPlayers.begin() + i);
 	}
 	Success("[G#" << GetId() << "] Player #" << playerid << " removed from the game");
@@ -147,7 +148,7 @@ void Game::CheckWinConditions() {
 	if (iType == GAME_OVER || iType == GAME_LOBBY) return;
 	if (vPlayers.size() < 1) return; //how?
 	if (vPlayers.size() == 1) Win(vPlayers[0]); //shouldn't hit.
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetCardAmount() < 1) Win(vPlayers[i]);
 	}
 }
@@ -205,9 +206,9 @@ std::string Game::ExecuteMove(std::string datain) {
 		std::string stringid = s.substr(0, sap);
 		int playerid;
 		try { playerid = stoi(stringid); }
-		catch (const std::invalid_argument& ia) { return "AFS"; }
-		catch (const std::out_of_range& oor) { return "AFS"; }
-		catch (const std::exception& e) { return "AFS"; }
+		catch (const std::invalid_argument&) { return "AFS"; }
+		catch (const std::out_of_range&) { return "AFS"; }
+		catch (const std::exception&) { return "AFS"; }
 
 		Player* pPlayer = GetSessionHandler()->GetPlayer(playerid);
 		if (!pPlayer) {
@@ -284,9 +285,9 @@ std::string Game::ExecuteMove(std::string datain) {
 		std::string stringid = s.substr(0, sap);
 		int playerid;
 		try { playerid = stoi(stringid); }
-		catch (const std::invalid_argument& ia) { return "AFS"; }
-		catch (const std::out_of_range& oor) { return "AFS"; }
-		catch (const std::exception& e) { return "AFS"; }
+		catch (const std::invalid_argument&) { return "AFS"; }
+		catch (const std::out_of_range&) { return "AFS"; }
+		catch (const std::exception&) { return "AFS"; }
 
 		Player* pPlayer = GetSessionHandler()->GetPlayer(playerid);
 		if (!pPlayer) {
@@ -355,7 +356,7 @@ bool Game::Validate(Card* card) {
 
 void Game::PassTurn() {
 	int iTurn = -1;
-	for (int i = 0; i < vPlayers.size(); i++) {
+	for (size_t i = 0; i < vPlayers.size(); i++) {
 		if (vPlayers[i]->GetId() == iPlayerTurnId) iTurn = i;
 	}
 	if (iTurn == -1) return;
