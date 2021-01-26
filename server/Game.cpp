@@ -471,7 +471,7 @@ void Game::AddDeck() {
 void Game::Deal() {
 	int c = 0;
 	for (size_t i = 0; i < vPlayers.size(); i++) {
-		Msg("[G#" << GetId() << "] Dealing player #" << vPlayers[i] << " with 5 cards");
+		Msg("[G#" << GetId() << "] Dealing player #" << vPlayers[i]->GetId() << " with 5 cards");
 		for (size_t s = 0; s < 5; s++){
 			TransferCardToPlayer(vDeck[0], vPlayers[i]);
 		}
