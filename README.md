@@ -34,6 +34,6 @@ Software used in development:
 
 
 Documentation:
-- Code documentation
-- Rules / How to play?
-- Setup
+- [Code documentation](https://docs.google.com/document/d/1cnLaoodAGI-W5EexEx87g-U-tWbgg6JDos0QijOTGrk/edit#heading=h.q2mnf1okp8lv)
+- [Rules / How to play?](https://docs.google.com/document/d/1aiXalqj7RMvEXlPZOWvW7U8EeXPoK4iV5A3Fq8M_DYA/edit#)
+- [Setup](https://docs.google.com/document/d/1eyiEu_HitksWSJBXbgazoFc8fsNfRjBQBWnBQ7lyt5c/edit?usp=sharing)
