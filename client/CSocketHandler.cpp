@@ -148,13 +148,13 @@ void Handle() {
 				if (game->HasId() && game->IsInGame() && game->IsInCardPlanning()) {
 					if (game->GetPlannedCard()->GetType() == TYPE_A) {
 						if (KEYPRESSED(0x31)) { 
-							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "1"); break; }
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "1"); game->SetInCardPlanning(false); break; }
 						if (KEYPRESSED(0x32)) {
-							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); break; }
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "2"); game->SetInCardPlanning(false); break; }
 						if (KEYPRESSED(0x33)) {
-							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); break; }
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "3"); game->SetInCardPlanning(false); break; }
 						if (KEYPRESSED(0x34)) {
-							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); break; }
+							sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "4"); game->SetInCardPlanning(false); break; }
 					}
 					else if (game->GetPlannedCard()->GetType() == TYPE_J) {
 						if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "playcard|%i|%i|%s|", game->GetId(), game->GetCachedNumber(), "10"); game->SetInCardPlanning(false); break; }
