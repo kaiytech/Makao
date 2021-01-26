@@ -405,6 +405,21 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	long long int remainingTime = iTurnEndTime - currentTime;
 	if (remainingTime < 1) {
 		iTurnEndTime = s.count() + TURN_TIME;
+
+		Card* card = vDeck[0];
+		if (!card) {
+			Error("[G#" << GetId() << "] Unhandled Exception!");
+			return "AFS";
+		}
+
+		Player *player = GetSessionHandler()->GetPlayer(iPlayerTurnId);
+		if (!player) {
+			Error("[G#" << GetId() << "] Unhandled Exception!");
+			return "AFS";
+		}
+
+		TransferCardToPlayer(card, player);
+
 		PassTurn();
 		return MsgGetGameStatus(playerid);
 	}
