@@ -92,7 +92,7 @@ void Handle() {
 				if (game->HasId() && !game->IsInGame() && !game->IsInLobby() && !game->IsInLobbyList()) {
 					if (KEYPRESSED(0x31)) { sprintf_s(msgtosend, "createlobby|%i", game->GetId());game->SetInLobby(true);break; }
 					if (KEYPRESSED(0x32)) { sprintf_s(msgtosend, "lobbylist|"); game->SetInLobbyList(true); break; }
-					if (KEYPRESSED(0x33)) { ShellExecute(0, 0, L"http://www.google.com", 0, 0, SW_SHOW); break; }
+					if (KEYPRESSED(0x33)) { ShellExecute(0, 0, L"https://docs.google.com/document/d/1aiXalqj7RMvEXlPZOWvW7U8EeXPoK4iV5A3Fq8M_DYA/edit?usp=sharing", 0, 0, SW_SHOW); break; }
 					if (KEYPRESSED(0x34)) { return; }
 				}
 
