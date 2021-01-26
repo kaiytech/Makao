@@ -80,6 +80,7 @@ private:
 
 	int iPlayerWonId;
 
+	int iToPull;
 	int iANum;
 	int iJNum;
 };

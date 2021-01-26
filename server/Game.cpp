@@ -13,6 +13,7 @@ Game::Game(int id) {
 	iPlayerWonId = -1;
 	iANum = -1;
 	iJNum = -1;
+	iToPull = 1;
 	pCardOnTop = nullptr;
 }
 
@@ -264,6 +265,22 @@ std::string Game::ExecuteMove(std::string datain) {
 			iANum = stoi(func);
 		}
 
+		if (
+			c->GetType() == TYPE_2 ||
+			c->GetType() == TYPE_3 ||
+			(c->GetType() == TYPE_K && c->GetSuit() == SUIT_SPADE) ||
+			(c->GetType() == TYPE_K && c->GetSuit() == SUIT_HEART)
+			) {
+				switch (c->GetType()) {
+				// by default, we pull 1 card, so we need to add to this number.
+				// that's why a 2 card adds only 1 to the pull amount
+				case TYPE_2: iToPull += 1; break; 
+				case TYPE_3: iToPull += 2; break;
+				case TYPE_K: iToPull += 4; break;
+				default: break;
+				}
+		}
+
 
 		std::chrono::seconds s2 = std::chrono::duration_cast<std::chrono::seconds> (
 			std::chrono::system_clock::now().time_since_epoch()
@@ -300,13 +317,16 @@ std::string Game::ExecuteMove(std::string datain) {
 			return "AFS";
 		}
 
-		Card* card = vDeck[0];
-		if (!card) {
-			Error("[G#" << GetId() << "] Can't finish move: can't pull a new card!");
-			return "AFS";
-		}
+		for (int i = 0; i < iToPull; i++) {
+			Card* card = vDeck[0];
+			if (!card) {
+				Error("[G#" << GetId() << "] Unhandled Exception!");
+				return "AFS";
+			}
 
-		TransferCardToPlayer(card, pPlayer);
+			TransferCardToPlayer(card, pPlayer);
+		}
+		iToPull = 1;
 
 		std::chrono::seconds s3 = std::chrono::duration_cast<std::chrono::seconds> (
 			std::chrono::system_clock::now().time_since_epoch()
@@ -325,8 +345,15 @@ std::string Game::ExecuteMove(std::string datain) {
 }
 
 bool Game::Validate(Card* card) {
+	// War:
+	if (iToPull > 1) {
+		if (card->GetType() == TYPE_2 || card->GetType() == TYPE_3 ||
+			(card->GetType() == TYPE_K && card->GetSuit() == SUIT_SPADE) ||
+			(card->GetType() == TYPE_K && card->GetSuit() == SUIT_HEART)
+			) return true;
+	}
 	// A demands:
-	if (iANum > 0) {
+	else if (iANum > 0) {
 		if (iANum == 1) { if (card->GetSuit() == SUIT_CLUB) return true; }
 		else if (iANum == 2) { if (card->GetSuit() == SUIT_SPADE) return true; }
 		else if (iANum == 3) { if (card->GetSuit() == SUIT_DIAMOND) return true; }
@@ -344,6 +371,7 @@ bool Game::Validate(Card* card) {
 		else if (iJNum == 8) { if (card->GetType() == TYPE_8 || card->GetType() == TYPE_J) return true; }
 		else if (iJNum == 9) { if (card->GetType() == TYPE_9 || card->GetType() == TYPE_J) return true; }
 	}
+	// standard parsing:
 	else if (
 		card->GetSuit() == pCardOnTop->GetSuit()
 		||
@@ -406,19 +434,25 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	if (remainingTime < 1) {
 		iTurnEndTime = s.count() + TURN_TIME;
 
-		Card* card = vDeck[0];
-		if (!card) {
-			Error("[G#" << GetId() << "] Unhandled Exception!");
-			return "AFS";
+		// penalty: deal player with n cards
+		for (int i = 0; i < iToPull; i++) {
+			Card* card = vDeck[0];
+			if (!card) {
+				Error("[G#" << GetId() << "] Unhandled Exception!");
+				return "AFS";
+			}
+
+			Player* player = GetSessionHandler()->GetPlayer(iPlayerTurnId);
+			if (!player) {
+				Error("[G#" << GetId() << "] Unhandled Exception!");
+				return "AFS";
+			}
+
+			TransferCardToPlayer(card, player);
 		}
 
-		Player *player = GetSessionHandler()->GetPlayer(iPlayerTurnId);
-		if (!player) {
-			Error("[G#" << GetId() << "] Unhandled Exception!");
-			return "AFS";
-		}
-
-		TransferCardToPlayer(card, player);
+		// reset the war counter
+		iToPull = 1;
 
 		PassTurn();
 		return MsgGetGameStatus(playerid);
@@ -461,8 +495,9 @@ std::string Game::MsgGetGameStatus(int playerid) {
 	else out.append(std::to_string(iJNum));
 	out.append("|");
 
-	//end?
-	out.append("0-"); //wip
+	//cards to deal (if there's a war going on)
+	out.append(std::to_string(iToPull));
+	out.append("-"); //wip
 
 	return out;
 	//return "gamestatus|1|2|3|*10|32|43|CA|S0|DK|C4|*HQ|X|0-";

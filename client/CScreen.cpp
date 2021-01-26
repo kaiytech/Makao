@@ -418,13 +418,19 @@ void Screen::DisplayGameScreen(std::string datain) {
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
-	//print: has the game ended?
+	//print: war?
 	{
 		int sap = workingdata.find("-");
 		std::string tempstring = workingdata.substr(0, sap);
-		//PRINT("Has the game ended?: " << (bool)stoi(tempstring) ? "Yes" : "No");
-		//if ((bool)stoi(tempstring)) cout << "Yes"; else cout << "No";
-		//cout << "\n";
+		if (stoi(tempstring) > 1) {
+			static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+			COORD crd = GetConsoleCursorPosition(hOut);
+			setCursorPosition(0, crd.Y);
+			cout << "  War: " << stoi(tempstring) << " cards.";
+		}
+		else {
+			cout << "            ";
+		}
 		workingdata = workingdata.substr(sap + 1, workingdata.length());
 	}
 
