@@ -305,13 +305,16 @@ void Screen::DisplayGameScreen(std::string datain) {
 
 		game->ClearCards(); // remember to clear the cached card list first.
 
+		int printedcards = 0;
 		while (true) {
+			if (printedcards >= 9) break;
 			if (playerlist.find("|") == string::npos) break;
 			int sap = playerlist.find("|");
 			std::string tempstring = playerlist.substr(0, sap);
 			Card* c = Card::GetCardFromString(tempstring);
 			game->AddCard(c); // add to card list
 			if (c && !game->IsInCardPlanning()) c->PrintSmall(playerindicator);
+			printedcards++;
 			//delete c;
 			// ^THAT LINE UNCOMMENTED WASTED ME AN HOUR OF MY PRECIOUS LIFE
 			// IM SERIOUS
@@ -371,7 +374,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 			FINISHPRINT;
 		}
 		else {
-			PRINT(" (1-9) - play card    (0) - next page           ");
+			PRINT(" (1-9) - play card                              ");
 			cout << " (z)   - draw card    (x) - forfeit             ";
 		}
 		setcolor(7);
