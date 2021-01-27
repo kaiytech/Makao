@@ -55,8 +55,8 @@ void Screen::DisplaySplashScreen() {
 	int x = w.x; int y = w.y;
 	std::vector<std::string> s;
 	setcolor(40);
-	for (size_t i = 1; i < (y - 8) / 2; i++) {
-		for (size_t i = 0; i <= x; i++)
+	for (int i = 1; i < (y - 8) / 2; i++) {
+		for (int i = 0; i <= x; i++)
 		{
 			cout << (char)176;
 		}
@@ -78,7 +78,7 @@ void Screen::DisplaySplashScreen() {
 	s.push_back("                                ");
 	for (size_t fi = 1; fi < s.size(); fi++) {
 		setcolor(40);
-		for (size_t i = 0; i < (x  - 36)/2; i++) cout << (char)176;
+		for (int i = 0; i < (x  - 36)/2; i++) cout << (char)176;
 		setcolor(112);
 		cout << s[fi] << "\n";
 		setcolor(7);
@@ -196,8 +196,8 @@ void Screen::DisplayGameOverScreen(std::string datain) {
 
 // don't use frequently as it causes blinking!!!
 void Screen::ClearScreen() {
-	for (size_t y = 0; y < GetWindowSize().y; y++){
-		for (size_t x = 0; x < GetWindowSize().x; x++){
+	for (int y = 0; y < GetWindowSize().y; y++){
+		for (int x = 0; x < GetWindowSize().x; x++){
 			cout << " ";
 		}
 		cout << "\n";
@@ -269,7 +269,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 		PRINT(" |MAKAO|    Game #" << tempstring);
 		setcolor(8);
 
-		for (size_t i = 0; i < GetWindowSize().x; i++) {
+		for (int i = 0; i < GetWindowSize().x; i++) {
 			cout << char(223);
 		}
 
@@ -367,7 +367,7 @@ void Screen::DisplayGameScreen(std::string datain) {
 		}
 		setcolor(6);
 		windowsize w = GetWindowSize();
-		for (size_t i = 0; i < w.x; i++){
+		for (int i = 0; i < w.x; i++){
 			cout << char(223);
 		}
 		cout << "\n";
@@ -487,7 +487,7 @@ void Screen::Fill(bool line = true) {
 	if (line) {
 		int spacesToDo = cbsi.srWindow.Right - cbsi.srWindow.Left - c.X;
 		std::string r = "";
-		for (size_t i = 0; i < spacesToDo; i++) {
+		for (int i = 0; i < spacesToDo; i++) {
 			r.append(" ");
 		}
 		r.append("\n");
@@ -498,8 +498,8 @@ void Screen::Fill(bool line = true) {
 		int spacesToDo = cbsi.srWindow.Right - cbsi.srWindow.Left;
 		std::string r = "";
 		if (linesToDo > 0) {
-			for (size_t i = 0; i < linesToDo; i++) {
-				for (size_t i = 0; i < spacesToDo; i++) {
+			for (int i = 0; i < linesToDo; i++) {
+				for (int i = 0; i < spacesToDo; i++) {
 					r.append(" ");
 				}
 			}
