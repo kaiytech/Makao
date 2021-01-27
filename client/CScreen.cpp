@@ -101,7 +101,8 @@ void Screen::DisplayMainMenu() {
 void Screen::DisplayLobby(std::string datain) {
 	int iEndOfPlayers = datain.find("*");
 	int iEndOfMessage = datain.find("-");
-	std::string roomnumber = datain.substr(iEndOfPlayers + 1, 1);
+	std::string roomnumber = datain.substr(iEndOfPlayers + 1, datain.length());
+	roomnumber = roomnumber.substr(0, roomnumber.find("-"));
 	PRINT("Pokoj ID: " << roomnumber);
 	bool isHost = false;
 
