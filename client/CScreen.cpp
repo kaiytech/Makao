@@ -189,6 +189,9 @@ void Screen::DisplayGameOverScreen(std::string datain) {
 	}
 	PRINT("Player #" << playerid << " wins the game!");
 	FINISHPRINT;
+	system("pause");
+	atexit(NULL);
+	//FINISHPRINT;
 }
 
 // don't use frequently as it causes blinking!!!
