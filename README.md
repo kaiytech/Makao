@@ -1,4 +1,9 @@
 # Makao
+![...](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey.svg)
+![...](https://img.shields.io/github/followers/kaitek666.svg?label=Follow&style=social)
+
+This program is released on under Creative Commons BY-NC-SA 4.0 license. Please refer to LICENSE.txt file for more information.
+
 - Language: C++
 - Platform: Windows (client), Windows (server)
 - System requirements: Windows and a monitor that can display your desktop.
