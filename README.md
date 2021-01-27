@@ -1,4 +1,7 @@
 # Makao
+![...](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey.svg)
+![...](https://img.shields.io/github/followers/kaitek666.svg?label=Follow&style=social)
+
 - Language: C++
 - Platform: Windows (client), Windows (server)
 - System requirements: Windows and a monitor that can display your desktop.
