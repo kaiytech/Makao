@@ -183,9 +183,9 @@ void Screen::DisplayGameOverScreen(std::string datain) {
 
 	int playerid = stoi(out);
 	if (playerid == game->GetId()) {
-		PRINT("You won!");
+	//	PRINT("You lost!");
 	} else {
-		PRINT("You lost!");
+	//	PRINT("You win!");
 	}
 	PRINT("Player #" << playerid << " wins the game!");
 	FINISHPRINT;
