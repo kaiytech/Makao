@@ -89,6 +89,7 @@ void Screen::DisplaySplashScreen() {
 void Screen::DisplayMainMenu() {
 	if (game->IsInGame()) return;
 	PRINT("Makao");
+	PRINT("by Kajetan Krawczyk, Michal Radtke");
 	PRINT("Press 1-4 to interact with menu:");
 	PRINT("1. New lobby");
 	PRINT("2. Lobby list");
