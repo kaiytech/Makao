@@ -10,6 +10,10 @@ using namespace std;
 #define LOG_CONNECTIONS 0
 
 void Handle() {
+	cout << "Please insert the server (host) IP: ";
+	string ip = "";
+	cin >> ip;
+
 	long SUCCESSFUL;
 	WSAData WinSockData;
 	WORD DLLVERSION;
@@ -27,7 +31,7 @@ void Handle() {
 	char message[200];
 
 	sock_CONNECTION = socket(AF_INET, SOCK_STREAM, NULL);
-	ADDRESS.sin_addr.S_un.S_addr = inet_addr("192.168.1.77");
+	ADDRESS.sin_addr.S_un.S_addr = inet_addr(ip.c_str());
 	ADDRESS.sin_family = AF_INET;
 	ADDRESS.sin_port = htons(444);
 	Warn("Launching WinSock at port 444");

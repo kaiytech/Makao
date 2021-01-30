@@ -23,6 +23,11 @@ using namespace std;
 
 void Handle() {
 
+	cout << "Please insert the server IP: ";
+	string ip = "";
+	cin >> ip;
+
+
 	long SUCCESSFUL;
 	WSAData WinSockData;
 	WORD DLLVersion;
@@ -35,7 +40,7 @@ void Handle() {
 
 	SOCKADDR_IN ADDRESS;
 
-	ADDRESS.sin_addr.S_un.S_addr = inet_addr(SERVER_IP);
+	ADDRESS.sin_addr.S_un.S_addr = inet_addr(ip.c_str());
 	ADDRESS.sin_family = AF_INET;
 	ADDRESS.sin_port = htons(444);
 
